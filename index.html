@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,6 +27,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-color); color: var(--text-main); padding: 24px; }
 
+    /* Classic Dashboard Header */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -42,6 +43,7 @@
     .dashboard-header p { font-size: 13px; color: #a3edcc; margin-top: 4px; }
     .header-badge { background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); }
 
+    /* KPI Metrics Cards Grid */
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -57,7 +59,9 @@
       align-items: center;
       justify-content: space-between;
       border: 1px solid rgba(224, 229, 242, 0.6);
+      transition: transform 0.2s;
     }
+    .metric-card:hover { transform: translateY(-2px); }
     .metric-info p { font-size: 12px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
     .metric-info h2 { font-size: 26px; font-weight: 700; color: var(--text-main); margin-top: 6px; }
     .metric-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
@@ -66,6 +70,7 @@
     .icon-pending { background: var(--danger-bg); color: var(--danger-color); }
     .icon-workable { background: var(--warning-bg); color: var(--warning-color); }
 
+    /* Filter Controls & Main Card */
     .main-card {
       background: var(--card-bg);
       border-radius: 16px;
@@ -81,21 +86,25 @@
     .search-input {
       width: 100%; padding: 10px 14px 10px 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc;
     }
-    .select-filter { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc; }
+    .search-input:focus { border-color: var(--primary-color); background: #fff; }
+    .select-filter { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc; color: var(--text-main); }
 
     .btn-export { background: #111c44; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .btn-export:hover { background: var(--primary-color); }
 
+    /* Table Styles */
     .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
     thead tr { background-color: #f7f9fc; border-bottom: 2px solid var(--border-color); }
-    th { padding: 14px 16px; font-weight: 700; color: var(--text-main); text-transform: uppercase; font-size: 11px; }
+    th { padding: 14px 16px; font-weight: 700; color: var(--text-main); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
     td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); color: var(--info-color); vertical-align: middle; }
     tbody tr:hover { background-color: #f8f9ff; }
 
+    /* Clickable Vehicle Number Button */
     .btn-vehicle {
-      background: #eef2ff; color: var(--primary-color); font-weight: 700; padding: 6px 12px; border-radius: 6px; border: 1px solid #c7d2fe; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      background: #eef2ff; color: var(--primary-color); font-weight: 700; padding: 6px 12px; border-radius: 6px; border: 1px solid #c7d2fe; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
     }
-    .btn-vehicle:hover { background: var(--primary-color); color: white; }
+    .btn-vehicle:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); }
 
     .badge { padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
     .badge-issued { background-color: var(--success-bg); color: var(--success-color); }
@@ -107,11 +116,11 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(17, 28, 68, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000;
     }
-    .modal-card { background: white; width: 90%; max-width: 600px; border-radius: 16px; overflow: hidden; }
+    .modal-card { background: white; width: 90%; max-width: 600px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     .modal-header { background: linear-gradient(135deg, #1b2559 0%, #111c44 100%); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
     .close-modal { background: rgba(255,255,255,0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; }
     .modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
-    .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .detail-item { background: #f8fafc; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border-color); }
     .detail-label { font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; }
     .detail-value { font-size: 14px; color: var(--text-main); font-weight: 600; margin-top: 4px; word-break: break-word; }
@@ -121,6 +130,7 @@
 </head>
 <body>
 
+  <!-- Dashboard Top Bar -->
   <div class="dashboard-header">
     <div>
       <h1><i class="fa-solid fa-truck-fast"></i> Vehicle Onboarding Dashboard</h1>
@@ -129,6 +139,7 @@
     <div class="header-badge"><i class="fa-solid fa-circle-dot" style="color:#05cd99"></i> Live Sync Active</div>
   </div>
 
+  <!-- KPI Metrics Cards -->
   <div class="metrics-grid">
     <div class="metric-card">
       <div class="metric-info"><p>Total Cases</p><h2 id="totalCases">0</h2></div>
@@ -148,6 +159,7 @@
     </div>
   </div>
 
+  <!-- Table Container -->
   <div class="main-card">
     <div class="filter-bar">
       <div class="filter-group">
@@ -183,7 +195,7 @@
     </div>
   </div>
 
-  <!-- Detail Modal -->
+  <!-- Popup Detail Modal -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -197,26 +209,25 @@
   </div>
 
   <script>
-    // ⚠️ PASTE YOUR GOOGLE SCRIPT URL HERE
-    const API_URL = "https://script.google.com/macros/s/AKfycbw5IpSBmsQyVviIHxKPiaISkuYboUS6JfFeBLlPXEjJJymAoHLbjm4It2s3NnYgcWuk/exec";
+    // ⚠️ APNA GOOGLE SCRIPT WEB APP URL YEAH PASTE KAREIN
+    const API_URL = "https://script.google.com/macros/s/AKfycbyHslvgv_ZLu_tkuxi6Pi3jBxbiCnzTlYSBy6YVoVIg53JBPDqzFXcvtbyjrlAnWiE/exec";
 
     let rawData = [];
     let currentFilteredData = [];
 
-    // JSONP Loader Function (Bypasses Browser Security)
+    // Script injection to bypass CORS
     function loadDataWithJSONP() {
       const script = document.createElement('script');
       script.src = API_URL + "?callback=handleDataResponse";
       script.onerror = function() {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Failed to load script. Please check API URL.</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script load failed! Check Web App URL.</span>";
       };
       document.body.appendChild(script);
     }
 
-    // Callback Function
     function handleDataResponse(data) {
       if (!data || data.length === 0 || data.error) {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Sheet me koi data nahi mil paya!</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Sheet me data nahi mila!</span>";
         return;
       }
 
@@ -230,12 +241,35 @@
       document.getElementById('tableWrapper').style.display = 'block';
     }
 
-    function getVal(row, keyNames) {
-      for (let k of Object.keys(row)) {
-        for (let name of keyNames) {
-          if (k.toLowerCase().trim() === name.toLowerCase().trim() || k.toLowerCase().includes(name.toLowerCase())) {
-            return row[k];
-          }
+    // Smart Column Value Fetcher (Ignores Category titles and picks exact Vehicle Registration Number)
+    function getVehicleNumber(row) {
+      const keys = Object.keys(row);
+      // Look for columns containing exact registration formats or names
+      for (let k of keys) {
+        let keyLower = k.toLowerCase();
+        let val = (row[k] || '').toString().trim();
+        
+        if ((keyLower.includes('reg') || keyLower.includes('veh') || keyLower.includes('number') || keyLower.includes('chassis')) 
+            && !val.toLowerCase().includes('old vehicle') && !val.toLowerCase().includes('new vehicle') && val !== '') {
+          return val;
+        }
+      }
+      // Fallback
+      for (let k of keys) {
+        let val = (row[k] || '').toString().trim();
+        if (val.match(/[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}/i)) {
+          return val;
+        }
+      }
+      return 'N/A';
+    }
+
+    function getVal(row, keywords) {
+      const keys = Object.keys(row);
+      for (let kw of keywords) {
+        let foundKey = keys.find(k => k.toLowerCase().trim() === kw.toLowerCase().trim() || k.toLowerCase().includes(kw.toLowerCase()));
+        if (foundKey && row[foundKey] !== undefined && row[foundKey] !== "") {
+          return row[foundKey];
         }
       }
       return '';
@@ -246,12 +280,15 @@
       let issued = 0, pending = 0, workable = 0;
 
       data.forEach(row => {
-        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal', 'Status']) || '').toString().toLowerCase();
-        if (remark.includes('issued') || remark.includes('done') || remark.includes('completed')) {
+        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal', 'Status', 'Cert Status']) || '').toString().toLowerCase();
+        
+        if (remark.includes('issued') || remark.includes('done') || remark.includes('completed') || remark.includes('certificate')) {
           issued++;
         } else {
-          pending++;
-          if (!remark.includes('deboarded')) workable++;
+          pending++; // Total Pendency
+          if (!remark.includes('deboarded') && !remark.includes('failed') && !remark.includes('cancel')) {
+            workable++;
+          }
         }
       });
 
@@ -266,18 +303,19 @@
       tbody.innerHTML = '';
 
       if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#707ebe;">No matching records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#707ebe;">No matching vehicle records found.</td></tr>`;
         return;
       }
 
       data.forEach((row, index) => {
-        const vehicleNo = getVal(row, ['Vehicle no.', 'Vehicle No', 'Vehicle Number', 'Vehicle']) || 'N/A';
-        const remark = getVal(row, ['Remarks', 'Remark', 'Portal', 'Status']) || 'Pending';
-        const owner = getVal(row, ['Owner', 'Customer', 'Party Name']) || '-';
+        const vehicleNo = getVehicleNumber(row);
+        const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'PB RTO';
+        const owner = getVal(row, ['Owner', 'Customer', 'Party Name', 'Client', 'Transporter']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
-        if (remLower.includes('issued') || remLower.includes('done')) {
+
+        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
           remarkBadge = `<span class="badge badge-issued"><i class="fa-solid fa-check"></i> ${remark}</span>`;
         } else if (remLower.includes('deboarded') || remLower.includes('failed')) {
           remarkBadge = `<span class="badge badge-pending"><i class="fa-solid fa-circle-xmark"></i> ${remark}</span>`;
@@ -311,7 +349,7 @@
         const matchesSearch = Object.values(row).some(v => 
           v !== null && v !== undefined && v.toString().toLowerCase().includes(query)
         );
-        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal', 'Status']) || '').toString().toLowerCase();
+        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString().toLowerCase();
         let matchesStatus = true;
 
         if (statusFilter === 'ISSUED') matchesStatus = remark.includes('issued') || remark.includes('done');
@@ -326,7 +364,7 @@
 
     function openVehicleDetail(index) {
       const rowData = currentFilteredData[index];
-      const vehicleNo = getVal(rowData, ['Vehicle no.', 'Vehicle No', 'Vehicle Number', 'Vehicle']) || 'Vehicle Detail';
+      const vehicleNo = getVehicleNumber(rowData);
 
       document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> ${vehicleNo}`;
       const modalContent = document.getElementById('modalDetailContent');
@@ -349,7 +387,7 @@
     function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
 
     function exportDataToCSV() {
-      if (!currentFilteredData || currentFilteredData.length === 0) return alert("No data to export!");
+      if (!currentFilteredData || currentFilteredData.length === 0) return alert("Export ke liye koi data nahi hai!");
       let csv = '';
       const headers = Object.keys(currentFilteredData[0]);
       csv += headers.join(',') + '\n';
@@ -363,7 +401,13 @@
       a.click();
     }
 
-    // Start JSONP Load
+    // Modal Close Overlay Click
+    window.onclick = function(event) {
+      const modal = document.getElementById('detailModal');
+      if (event.target === modal) closeModal();
+    };
+
+    // Load JSONP Data
     loadDataWithJSONP();
   </script>
 </body>
