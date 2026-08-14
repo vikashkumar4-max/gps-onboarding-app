@@ -3,266 +3,297 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Executive Vehicle Onboarding Dashboard</title>
+  <title>PAA 🤵🏻 DASHBOARD</title>
   
-  <!-- Google Fonts & FontAwesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Apple-style Premium Font & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     :root {
-      /* Theme Custom Palette */
-      --bg-color: #f1f5f9;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --primary-light: #eff6ff;
+      /* Apple & OnePlus Hybrid Palette */
+      --bg-color: #0f1217;                /* OnePlus Dark Matte Finish */
+      --card-bg: rgba(22, 27, 34, 0.75); /* Apple Frosted Glass Card */
+      --card-border: rgba(255, 255, 255, 0.08);
       
-      --success: #10b981;
-      --success-bg: #ecfdf5;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
       
-      --danger: #ef4444;
-      --danger-bg: #fef2f2;
+      --oneplus-red: #eb0029;            /* Signature OnePlus Red */
+      --oneplus-red-hover: #ff1a40;
       
-      --warning: #f59e0b;
-      --warning-bg: #fffbebf;
+      --apple-blue: #0a84ff;
+      --apple-green: #30d158;
+      --apple-green-bg: rgba(48, 209, 88, 0.12);
+      --apple-yellow: #ffd60a;
+      --apple-yellow-bg: rgba(255, 214, 10, 0.12);
+      --apple-red: #ff453a;
+      --apple-red-bg: rgba(255, 69, 58, 0.12);
       
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
-      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
+      --glass-blur: blur(20px);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
     
     body { 
-      background-color: var(--bg-color); 
-      /* Subtle Background Texture/Pattern */
-      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
-      background-size: 16px 16px;
-      color: var(--text-main); 
-      padding: 16px; 
+      background-color: var(--bg-color);
+      /* Subtle Ambient Glow */
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(235, 0, 41, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(10, 132, 255, 0.06) 0%, transparent 40%);
+      background-attachment: fixed;
+      color: var(--text-primary); 
+      padding: 20px 16px; 
       min-height: 100vh; 
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 1350px;
+      max-width: 1300px;
       margin: 0 auto;
     }
 
-    /* Personalized Executive Header */
+    /* Apple Frosted Glass Header with OnePlus Red Line Accent */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      /* Background Theme Gradient */
-      background: linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #3a506b 100%);
-      padding: 20px 24px;
-      border-radius: 18px;
-      color: white;
-      box-shadow: 0 12px 24px -6px rgba(11, 19, 43, 0.3);
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      padding: 22px 28px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      position: relative;
+      overflow: hidden;
       flex-wrap: wrap;
       gap: 16px;
+    }
+
+    /* OnePlus Red Top Accent Border */
+    .dashboard-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--oneplus-red), #ff5252);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
     }
 
-    /* Profile / Logo Image Styling */
     .user-avatar {
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
-      border: 2px solid #38bdf8;
+      border: 2px solid var(--oneplus-red);
       object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 0 15px rgba(235, 0, 41, 0.3);
     }
 
     .header-title-box h1 { 
       font-size: 22px; 
-      font-weight: 800; 
+      font-weight: 700; 
       display: flex; 
       align-items: center; 
-      gap: 8px; 
-      letter-spacing: -0.3px;
+      gap: 10px; 
+      letter-spacing: -0.4px;
+      color: #ffffff;
     }
 
     .header-title-box p { 
-      font-size: 12.5px; 
-      color: #94a3b8; 
-      margin-top: 3px; 
-      font-weight: 500;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 13px; 
+      color: var(--text-secondary); 
+      margin-top: 4px; 
+      font-weight: 400;
     }
 
     .header-badge { 
-      background: rgba(255, 255, 255, 0.08); 
-      padding: 8px 14px; 
+      background: rgba(255, 255, 255, 0.05); 
+      padding: 8px 16px; 
       border-radius: 30px; 
-      font-size: 11.5px; 
-      font-weight: 600; 
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 12px; 
+      font-weight: 500; 
+      border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       gap: 8px;
+      color: #d0d7de;
     }
+    
     .header-badge .dot {
-      width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;
+      width: 8px; height: 8px; background: var(--apple-green); border-radius: 50%; box-shadow: 0 0 10px var(--apple-green);
     }
 
-    /* KPI Metric Cards Grid */
+    /* Apple Minimal Metric Cards Grid */
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .metric-card {
       background: var(--card-bg);
-      padding: 18px;
-      border-radius: 16px;
-      box-shadow: var(--shadow-sm);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      padding: 20px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--card-border);
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .metric-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
     }
 
     .metric-info p { 
-      font-size: 10px; 
-      color: var(--text-muted); 
-      font-weight: 800; 
+      font-size: 11px; 
+      color: var(--text-secondary); 
+      font-weight: 600; 
       text-transform: uppercase; 
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
+    
     .metric-info h2 { 
-      font-size: 26px; 
-      font-weight: 800; 
-      color: var(--text-main); 
-      margin-top: 4px; 
+      font-size: 28px; 
+      font-weight: 700; 
+      color: #ffffff; 
+      margin-top: 6px; 
+      letter-spacing: -0.5px;
     }
 
     .metric-icon { 
       width: 46px; 
       height: 46px; 
-      border-radius: 12px; 
+      border-radius: 14px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      font-size: 20px; 
+      font-size: 18px; 
     }
 
-    .icon-total { background: #e0f2fe; color: #0284c7; }
-    .icon-issued { background: var(--success-bg); color: var(--success); }
-    .icon-pending { background: var(--danger-bg); color: var(--danger); }
-    .icon-action { background: #fef3c7; color: #d97706; }
+    .icon-total { background: rgba(10, 132, 255, 0.12); color: var(--apple-blue); }
+    .icon-issued { background: var(--apple-green-bg); color: var(--apple-green); }
+    .icon-pending { background: var(--apple-red-bg); color: var(--apple-red); }
+    .icon-action { background: var(--apple-yellow-bg); color: var(--apple-yellow); }
 
     /* Main Table Container Card */
     .main-card {
       background: var(--card-bg);
-      border-radius: 18px;
-      padding: 20px;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-color);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
+      padding: 22px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
 
     .filter-bar { 
       display: flex; 
       flex-direction: column;
       gap: 12px; 
-      margin-bottom: 18px; 
+      margin-bottom: 20px; 
     }
-    .filter-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    
+    .filter-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
     .search-wrapper { position: relative; width: 100%; }
     .search-wrapper i { 
       position: absolute; 
-      left: 14px; 
+      left: 16px; 
       top: 50%; 
       transform: translateY(-50%); 
-      color: var(--text-muted); 
+      color: var(--text-secondary); 
       font-size: 14px;
     }
     
     .search-input {
       width: 100%; 
-      padding: 12px 14px 12px 38px; 
-      border: 1px solid var(--border-color); 
-      border-radius: 10px; 
-      font-size: 13px; 
+      padding: 12px 16px 12px 42px; 
+      border: 1px solid var(--card-border); 
+      border-radius: 12px; 
+      font-size: 13.5px; 
       outline: none; 
-      background: #f8fafc;
-      color: var(--text-main);
-      font-weight: 500;
+      background: rgba(0, 0, 0, 0.3);
+      color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
     }
 
     .select-filter { 
       width: 100%;
-      padding: 12px 14px; 
-      border: 1px solid var(--border-color); 
-      border-radius: 10px; 
-      font-size: 13px; 
+      padding: 12px 16px; 
+      border: 1px solid var(--card-border); 
+      border-radius: 12px; 
+      font-size: 13.5px; 
       outline: none; 
-      background: #f8fafc; 
-      color: var(--text-main); 
-      font-weight: 600; 
+      background: rgba(0, 0, 0, 0.3); 
+      color: #ffffff; 
+      cursor: pointer;
     }
 
+    .select-filter option {
+      background-color: #161b22;
+      color: #ffffff;
+    }
+
+    /* OnePlus Signature Red Button */
     .btn-export { 
       width: 100%;
       justify-content: center;
-      background: var(--text-main); 
+      background: var(--oneplus-red); 
       color: #ffffff; 
       border: none; 
-      padding: 12px; 
-      border-radius: 10px; 
+      padding: 12px 20px; 
+      border-radius: 12px; 
       font-size: 13px; 
-      font-weight: 700; 
+      font-weight: 600; 
       cursor: pointer; 
       display: flex; 
       align-items: center; 
       gap: 8px; 
+      transition: background 0.2s;
     }
 
-    /* Table Mobile Responsive Scroll */
+    .btn-export:hover {
+      background: var(--oneplus-red-hover);
+    }
+
+    /* Table Design */
     .table-container { 
       overflow-x: auto; 
-      border-radius: 12px; 
-      border: 1px solid var(--border-color); 
-      -webkit-overflow-scrolling: touch;
+      border-radius: 14px; 
+      border: 1px solid var(--card-border); 
     }
     
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 520px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 540px; }
     
-    thead tr { background-color: #f8fafc; }
-    th { padding: 14px 16px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
-    td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+    thead tr { background-color: rgba(255, 255, 255, 0.03); }
+    th { padding: 14px 18px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    td { padding: 14px 18px; border-bottom: 1px solid var(--card-border); vertical-align: middle; color: var(--text-primary); }
 
     .btn-vehicle {
-      background: #eff6ff; 
-      color: #2563eb; 
-      font-weight: 700; 
+      background: rgba(10, 132, 255, 0.1); 
+      color: var(--apple-blue); 
+      font-weight: 600; 
       padding: 6px 12px; 
       border-radius: 8px; 
-      border: 1px solid #bfdbfe; 
+      border: 1px solid rgba(10, 132, 255, 0.2); 
       font-size: 12px;
       display: inline-flex;
       align-items: center;
@@ -271,63 +302,67 @@
     }
 
     .btn-view {
-      background: #f1f5f9; 
-      color: #334155; 
-      font-weight: 600; 
+      background: rgba(255, 255, 255, 0.06); 
+      color: #e6edf3; 
+      font-weight: 500; 
       padding: 6px 12px; 
       border-radius: 8px; 
-      border: 1px solid #cbd5e1; 
-      font-size: 11px;
+      border: 1px solid var(--card-border); 
+      font-size: 12px;
       cursor: pointer;
+      transition: background 0.2s;
     }
+
+    .btn-view:hover { background: rgba(255, 255, 255, 0.12); }
 
     .badge { 
-      padding: 5px 10px; 
+      padding: 5px 12px; 
       border-radius: 20px; 
       font-size: 11px; 
-      font-weight: 700; 
+      font-weight: 600; 
       display: inline-flex; 
       align-items: center; 
-      gap: 5px; 
-      white-space: nowrap;
+      gap: 6px; 
     }
-    .badge-issued { background-color: var(--success-bg); color: #047857; }
-    .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
-    .badge-warning { background-color: #fef3c7; color: #b45309; }
+    .badge-issued { background-color: var(--apple-green-bg); color: var(--apple-green); border: 1px solid rgba(48, 209, 88, 0.2); }
+    .badge-pending { background-color: var(--apple-red-bg); color: var(--apple-red); border: 1px solid rgba(255, 69, 58, 0.2); }
+    .badge-warning { background-color: var(--apple-yellow-bg); color: var(--apple-yellow); border: 1px solid rgba(255, 214, 10, 0.2); }
 
-    /* Detail Modal Overlay */
+    /* Modal Styling */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.75); 
-      backdrop-filter: blur(4px); 
+      background: rgba(0, 0, 0, 0.8); 
+      backdrop-filter: blur(8px); 
       display: none; 
       align-items: center; 
       justify-content: center; 
       z-index: 1000;
-      padding: 14px;
+      padding: 16px;
     }
 
     .modal-card { 
-      background: #ffffff; 
+      background: #161b22; 
       width: 100%; 
       max-width: 520px; 
-      border-radius: 18px; 
+      border-radius: 22px; 
       overflow: hidden; 
-      box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.25); 
+      border: 1px solid var(--card-border);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); 
     }
 
     .modal-header { 
-      background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%); 
+      background: rgba(255, 255, 255, 0.03); 
       color: white; 
-      padding: 16px 20px; 
+      padding: 18px 24px; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
+      border-bottom: 1px solid var(--card-border);
     }
-    .modal-header h3 { font-size: 16px; font-weight: 700; }
+    .modal-header h3 { font-size: 16px; font-weight: 600; }
 
     .close-modal { 
-      background: rgba(255,255,255,0.15); 
+      background: rgba(255,255,255,0.1); 
       border: none; 
       color: white; 
       width: 30px; 
@@ -337,29 +372,27 @@
       cursor: pointer;
     }
 
-    .modal-body { padding: 18px; max-height: 75vh; overflow-y: auto; }
-    .detail-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; }
+    .detail-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     
     .detail-item { 
-      background: #f8fafc; 
-      padding: 10px 12px; 
-      border-radius: 8px; 
-      border: 1px solid var(--border-color); 
+      background: rgba(0, 0, 0, 0.25); 
+      padding: 12px 14px; 
+      border-radius: 10px; 
+      border: 1px solid var(--card-border); 
     }
-    .detail-label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
-    .detail-value { font-size: 13px; color: var(--text-main); font-weight: 700; margin-top: 2px; word-break: break-word; }
+    .detail-label { font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; }
+    .detail-value { font-size: 13.5px; color: #ffffff; font-weight: 600; margin-top: 4px; word-break: break-word; }
 
-    #loader { text-align: center; padding: 40px 10px; color: var(--primary); font-weight: 700; font-size: 14px; }
+    #loader { text-align: center; padding: 40px 10px; color: var(--oneplus-red); font-weight: 600; font-size: 15px; }
 
-    /* Desktop Adjustments */
     @media (min-width: 768px) {
-      body { padding: 32px 24px; }
-      .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+      body { padding: 32px; }
       .filter-bar { flex-direction: row; justify-content: space-between; }
       .filter-group { flex-direction: row; width: auto; }
-      .search-wrapper { width: 300px; }
+      .search-wrapper { width: 320px; }
       .btn-export { width: auto; }
-      .detail-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .detail-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -367,41 +400,39 @@
 
   <div class="container">
     
-    <!-- Custom Header Section -->
+    <!-- CHANGE 1: Title updated to PAA STATE DASHBOARD -->
     <div class="dashboard-header">
       <div class="header-left">
-        <!-- 🖼️ Aapki Profile / Logo Image -->
-        <img src="https://ui-avatars.com/api/?name=Admin+Dashboard&background=38bdf8&color=fff&size=128" alt="Profile" class="user-avatar" id="userAvatar">
-        
+        <img src="https://ui-avatars.com/api/?name=PAA+Dashboard&background=eb0029&color=fff&size=128" alt="Profile" class="user-avatar" id="userAvatar">
         <div class="header-title-box">
-          <!-- ✏️ Change Your Name / Title Here -->
-          <h1>🚛 AIS Device certification Dashboard</h1>
-          <!-- ✏️ Change Subtitle / Description Lines Here -->
+          <h1>PAA 🤵🏻 DASHBOARD</h1>
           <p>Managed by <strong>MRATYUNJAY</strong> • Real-time Sync Active ⚡</p>
         </div>
       </div>
 
       <div class="header-right">
         <div class="header-badge">
-          <span class="dot"></span> Live Sheet Sync
+          <span class="dot"></span> Live Sync Active
         </div>
       </div>
     </div>
 
-    <!-- KPI Metric Cards Grid with Emojis -->
+    <!-- Apple & OnePlus Style Metric Cards Grid -->
     <div class="metrics-grid">
+      <!-- CHANGE 2: Emoji removed from Total Cases -->
       <div class="metric-card" onclick="filterByCard('ALL')">
         <div class="metric-info">
-          <p>Total Cases 📁</p>
+          <p>Total Cases</p>
           <h2 id="totalCases">0</h2>
         </div>
-        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-closed"></i></div>
+        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-open"></i></div>
       </div>
 
+      <!-- CHANGE 3: Label changed to Certificate Issue -->
       <div class="metric-card" onclick="filterByCard('ISSUED')">
         <div class="metric-info">
-          <p>Issued </p>
-          <h2 id="issuedCount" style="color: var(--success);">0</h2>
+          <p>Certificate Issue ✨</p>
+          <h2 id="issuedCount" style="color: var(--apple-green);">0</h2>
         </div>
         <div class="metric-icon icon-issued"><i class="fa-solid fa-circle-check"></i></div>
       </div>
@@ -409,27 +440,27 @@
       <div class="metric-card" onclick="filterByCard('PENDING')">
         <div class="metric-info">
           <p>Pending ⏳</p>
-          <h2 id="pendingCount" style="color: var(--danger);">0</h2>
+          <h2 id="pendingCount" style="color: var(--apple-red);">0</h2>
         </div>
-        <div class="metric-icon icon-pending"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="metric-icon icon-pending"><i class="fa-solid fa-circle-exclamation"></i></div>
       </div>
 
       <div class="metric-card" onclick="filterByCard('NEED_ACTION')">
         <div class="metric-info">
           <p>Need Action 🛠️</p>
-          <h2 id="actionableCount" style="color: var(--warning);">0</h2>
+          <h2 id="actionableCount" style="color: var(--apple-yellow);">0</h2>
         </div>
-        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt-lightning"></i></div>
+        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt"></i></div>
       </div>
     </div>
 
-    <!-- Main Data Table Container -->
+    <!-- Main Table Container Card -->
     <div class="main-card">
       <div class="filter-bar">
         <div class="filter-group">
           <div class="search-wrapper">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="applyFilters()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Permit Holder..." onkeyup="applyFilters()">
           </div>
           <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
             <option value="ALL">All Status / Remarks</option>
@@ -450,7 +481,8 @@
               <th>#</th>
               <th>Vehicle No.</th>
               <th>Status</th>
-              <th>Owner / Company</th>
+              <!-- CHANGE 4 Column Header: Permit Holder -->
+              <th>Permit Holder</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -484,14 +516,14 @@
       const script = document.createElement('script');
       script.src = API_URL + "?callback=handleDataResponse";
       script.onerror = function() {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script Load Failed! Web App URL check karein.</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:var(--apple-red);'>Script Load Failed! Web App URL check karein.</span>";
       };
       document.body.appendChild(script);
     }
 
     function handleDataResponse(data) {
       if (!data || data.length === 0 || data.error) {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Sheet me data nahi mila!</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:var(--apple-red);'>Sheet me data nahi mila!</span>";
         return;
       }
 
@@ -593,14 +625,16 @@
       tbody.innerHTML = '';
 
       if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No matching records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--text-secondary);">No matching records found.</td></tr>`;
         return;
       }
 
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Party Name']) || '-';
+        
+        // CHANGE 4 Data Fetching: Searching 'Permit Holder' first from Google Sheet
+        const permitHolder = getVal(row, ['Permit Holder', 'Permit Holder Name', 'PermitHolder', 'Owner Name', 'Owner', 'Customer Name', 'Party Name']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning">⚡ ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
@@ -620,7 +654,7 @@
             </button>
           </td>
           <td>${remarkBadge}</td>
-          <td><strong>${owner}</strong></td>
+          <td><strong>${permitHolder}</strong></td>
           <td>
             <button class="btn-view" onclick="openVehicleDetail(${index})">
               <i class="fa-regular fa-eye"></i> View All
@@ -703,7 +737,7 @@
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a');
       a.href = window.URL.createObjectURL(blob);
-      a.download = `Vehicle_Data_${new Date().toISOString().slice(0,10)}.csv`;
+      a.download = `PAA_State_Data_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
     }
 
