@@ -87,7 +87,7 @@
       width: 100%; padding: 10px 14px 10px 38px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc;
     }
     .search-input:focus { border-color: var(--primary-color); background: #fff; }
-    .select-filter { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc; color: var(--text-main); }
+    .select-filter { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; background: #f8fafc; color: var(--text-main); font-weight: 500; }
 
     .btn-export { background: #111c44; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .btn-export:hover { background: var(--primary-color); }
@@ -100,7 +100,6 @@
     td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); color: var(--info-color); vertical-align: middle; }
     tbody tr:hover { background-color: #f8f9ff; }
 
-    /* Clickable Vehicle Number Button */
     .btn-vehicle {
       background: #eef2ff; color: var(--primary-color); font-weight: 700; padding: 6px 12px; border-radius: 6px; border: 1px solid #c7d2fe; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
     }
@@ -154,8 +153,8 @@
       <div class="metric-icon icon-pending"><i class="fa-solid fa-triangle-exclamation"></i></div>
     </div>
     <div class="metric-card">
-      <div class="metric-info"><p>Workable Vehicles</p><h2 id="workableCount" style="color: var(--warning-color);">0</h2></div>
-      <div class="metric-icon icon-workable"><i class="fa-solid fa-screws-tilting"></i></div>
+      <div class="metric-info"><p>Need Action</p><h2 id="actionableCount" style="color: var(--warning-color);">0</h2></div>
+      <div class="metric-icon icon-workable"><i class="fa-solid fa-bolt"></i></div>
     </div>
   </div>
 
@@ -170,8 +169,8 @@
         <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
           <option value="ALL">All Status / Remarks</option>
           <option value="ISSUED">Certificate Issued</option>
-          <option value="PENDING">Total Pending / Deboarded</option>
-          <option value="WORKABLE">Workable Records</option>
+          <option value="PENDING">Total Pending</option>
+          <option value="NEED_ACTION">Need Action (3 Specific Status)</option>
         </select>
       </div>
       <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-excel"></i> Export CSV</button>
@@ -209,13 +208,12 @@
   </div>
 
   <script>
-    // ⚠️ APNA GOOGLE SCRIPT WEB APP URL YEAH PASTE KAREIN
+    // ⚠️ PASTE YOUR GOOGLE SCRIPT URL HERE
     const API_URL = "https://script.google.com/macros/s/AKfycbyHslvgv_ZLu_tkuxi6Pi3jBxbiCnzTlYSBy6YVoVIg53JBPDqzFXcvtbyjrlAnWiE/exec";
 
     let rawData = [];
     let currentFilteredData = [];
 
-    // Script injection to bypass CORS
     function loadDataWithJSONP() {
       const script = document.createElement('script');
       script.src = API_URL + "?callback=handleDataResponse";
@@ -241,61 +239,76 @@
       document.getElementById('tableWrapper').style.display = 'block';
     }
 
-    // Smart Column Value Fetcher (Ignores Category titles and picks exact Vehicle Registration Number)
-    function getVehicleNumber(row) {
+    function getVal(row, possibleNames) {
+      if (!row) return '';
       const keys = Object.keys(row);
-      // Look for columns containing exact registration formats or names
-      for (let k of keys) {
-        let keyLower = k.toLowerCase();
-        let val = (row[k] || '').toString().trim();
-        
-        if ((keyLower.includes('reg') || keyLower.includes('veh') || keyLower.includes('number') || keyLower.includes('chassis')) 
-            && !val.toLowerCase().includes('old vehicle') && !val.toLowerCase().includes('new vehicle') && val !== '') {
-          return val;
+      
+      for (let name of possibleNames) {
+        let matchedKey = keys.find(k => k.toLowerCase().trim() === name.toLowerCase().trim());
+        if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
+          return row[matchedKey];
         }
       }
-      // Fallback
-      for (let k of keys) {
-        let val = (row[k] || '').toString().trim();
-        if (val.match(/[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}/i)) {
-          return val;
-        }
-      }
-      return 'N/A';
-    }
 
-    function getVal(row, keywords) {
-      const keys = Object.keys(row);
-      for (let kw of keywords) {
-        let foundKey = keys.find(k => k.toLowerCase().trim() === kw.toLowerCase().trim() || k.toLowerCase().includes(kw.toLowerCase()));
-        if (foundKey && row[foundKey] !== undefined && row[foundKey] !== "") {
-          return row[foundKey];
+      for (let name of possibleNames) {
+        let matchedKey = keys.find(k => k.toLowerCase().includes(name.toLowerCase()));
+        if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
+          return row[matchedKey];
         }
       }
       return '';
     }
 
+    function getVehicleNumber(row) {
+      let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Registration No', 'Vehicle Number', 'Vehicle No', 'Veh No', 'Reg No', 'Vehicle No.']);
+      
+      if (veh && !veh.toUpperCase().startsWith('TRAX') && !veh.toUpperCase().startsWith('IMEI') && veh.length < 15) {
+        return veh;
+      }
+
+      const keys = Object.keys(row);
+      for (let k of keys) {
+        let val = (row[k] || '').toString().trim();
+        if (val.match(/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$/i)) {
+          return val;
+        }
+      }
+      return veh || 'N/A';
+    }
+
+    // Checking Need Action Condition (Activation Pending, Check Not Clear, Topup Pending)
+    function isNeedActionStatus(remark) {
+      let rem = remark.toString().toLowerCase();
+      return rem.includes('activation pending') || 
+             rem.includes('check not clear') || 
+             rem.includes('topup pending') || 
+             rem.includes('top up pending');
+    }
+
     function calculateMetrics(data) {
       let total = data.length;
-      let issued = 0, pending = 0, workable = 0;
+      let issued = 0, pending = 0, needAction = 0;
 
       data.forEach(row => {
-        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal', 'Status', 'Cert Status']) || '').toString().toLowerCase();
-        
-        if (remark.includes('issued') || remark.includes('done') || remark.includes('completed') || remark.includes('certificate')) {
+        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status', 'Cert Status']) || '').toString();
+        let remLower = remark.toLowerCase();
+
+        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed') || remLower.includes('certificate')) {
           issued++;
         } else {
           pending++; // Total Pendency
-          if (!remark.includes('deboarded') && !remark.includes('failed') && !remark.includes('cancel')) {
-            workable++;
-          }
+        }
+
+        // Specifically check for Need Action
+        if (isNeedActionStatus(remark)) {
+          needAction++;
         }
       });
 
       document.getElementById('totalCases').innerText = total;
       document.getElementById('issuedCount').innerText = issued;
       document.getElementById('pendingCount').innerText = pending;
-      document.getElementById('workableCount').innerText = workable;
+      document.getElementById('actionableCount').innerText = needAction;
     }
 
     function renderTable(data) {
@@ -309,8 +322,8 @@
 
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
-        const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'PB RTO';
-        const owner = getVal(row, ['Owner', 'Customer', 'Party Name', 'Client', 'Transporter']) || '-';
+        const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
+        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Customer', 'Party Name', 'Party', 'Transporter', 'Client']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
@@ -349,12 +362,18 @@
         const matchesSearch = Object.values(row).some(v => 
           v !== null && v !== undefined && v.toString().toLowerCase().includes(query)
         );
-        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString().toLowerCase();
+        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
+        let remLower = remark.toLowerCase();
         let matchesStatus = true;
 
-        if (statusFilter === 'ISSUED') matchesStatus = remark.includes('issued') || remark.includes('done');
-        else if (statusFilter === 'PENDING') matchesStatus = !remark.includes('issued') && !remark.includes('done');
-        else if (statusFilter === 'WORKABLE') matchesStatus = (!remark.includes('issued') && !remark.includes('done')) && (!remark.includes('deboarded'));
+        if (statusFilter === 'ISSUED') {
+          matchesStatus = remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed');
+        } else if (statusFilter === 'PENDING') {
+          matchesStatus = !remLower.includes('issued') && !remLower.includes('done') && !remLower.includes('completed');
+        } else if (statusFilter === 'NEED_ACTION') {
+          // Exact 3 Need Action conditions filter
+          matchesStatus = isNeedActionStatus(remark);
+        }
 
         return matchesSearch && matchesStatus;
       });
@@ -401,13 +420,11 @@
       a.click();
     }
 
-    // Modal Close Overlay Click
     window.onclick = function(event) {
       const modal = document.getElementById('detailModal');
       if (event.target === modal) closeModal();
     };
 
-    // Load JSONP Data
     loadDataWithJSONP();
   </script>
 </body>
