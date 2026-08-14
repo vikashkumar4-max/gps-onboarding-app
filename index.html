@@ -3,297 +3,266 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Vehicle Onboarding Dashboard • Apple & OnePlus Style</title>
+  <title>Executive Vehicle Onboarding Dashboard</title>
   
-  <!-- Apple-style Premium Font & FontAwesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     :root {
-      /* Apple & OnePlus Hybrid Palette */
-      --bg-color: #0f1217;                /* OnePlus Dark Matte Finish */
-      --card-bg: rgba(22, 27, 34, 0.75); /* Apple Frosted Glass Card */
-      --card-border: rgba(255, 255, 255, 0.08);
+      /* Theme Custom Palette */
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-light: #eff6ff;
       
-      --text-primary: #f0f6fc;
-      --text-secondary: #8b949e;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
       
-      --oneplus-red: #eb0029;            /* Signature OnePlus Red */
-      --oneplus-red-hover: #ff1a40;
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
       
-      --apple-blue: #0a84ff;
-      --apple-green: #30d158;
-      --apple-green-bg: rgba(48, 209, 88, 0.12);
-      --apple-yellow: #ffd60a;
-      --apple-yellow-bg: rgba(255, 214, 10, 0.12);
-      --apple-red: #ff453a;
-      --apple-red-bg: rgba(255, 69, 58, 0.12);
+      --warning: #f59e0b;
+      --warning-bg: #fffbebf;
       
-      --glass-blur: blur(20px);
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     
     body { 
-      background-color: var(--bg-color);
-      /* Subtle Ambient Glow */
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(235, 0, 41, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(10, 132, 255, 0.06) 0%, transparent 40%);
-      background-attachment: fixed;
-      color: var(--text-primary); 
-      padding: 20px 16px; 
+      background-color: var(--bg-color); 
+      /* Subtle Background Texture/Pattern */
+      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+      background-size: 16px 16px;
+      color: var(--text-main); 
+      padding: 16px; 
       min-height: 100vh; 
-      -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1350px;
       margin: 0 auto;
     }
 
-    /* Apple Frosted Glass Header with OnePlus Red Line Accent */
+    /* Personalized Executive Header */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
-      background: var(--card-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      padding: 22px 28px;
-      border-radius: 20px;
-      border: 1px solid var(--card-border);
-      position: relative;
-      overflow: hidden;
+      margin-bottom: 20px;
+      /* Background Theme Gradient */
+      background: linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #3a506b 100%);
+      padding: 20px 24px;
+      border-radius: 18px;
+      color: white;
+      box-shadow: 0 12px 24px -6px rgba(11, 19, 43, 0.3);
       flex-wrap: wrap;
       gap: 16px;
-    }
-
-    /* OnePlus Red Top Accent Border */
-    .dashboard-header::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--oneplus-red), #ff5252);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
     }
 
+    /* Profile / Logo Image Styling */
     .user-avatar {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      border: 2px solid var(--oneplus-red);
+      border: 2px solid #38bdf8;
       object-fit: cover;
-      box-shadow: 0 0 15px rgba(235, 0, 41, 0.3);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .header-title-box h1 { 
       font-size: 22px; 
-      font-weight: 700; 
+      font-weight: 800; 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
-      letter-spacing: -0.4px;
-      color: #ffffff;
+      gap: 8px; 
+      letter-spacing: -0.3px;
     }
 
     .header-title-box p { 
-      font-size: 13px; 
-      color: var(--text-secondary); 
-      margin-top: 4px; 
-      font-weight: 400;
+      font-size: 12.5px; 
+      color: #94a3b8; 
+      margin-top: 3px; 
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .header-badge { 
-      background: rgba(255, 255, 255, 0.05); 
-      padding: 8px 16px; 
+      background: rgba(255, 255, 255, 0.08); 
+      padding: 8px 14px; 
       border-radius: 30px; 
-      font-size: 12px; 
-      font-weight: 500; 
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 11.5px; 
+      font-weight: 600; 
+      border: 1px solid rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #d0d7de;
     }
-    
     .header-badge .dot {
-      width: 8px; height: 8px; background: var(--apple-green); border-radius: 50%; box-shadow: 0 0 10px var(--apple-green);
+      width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;
     }
 
-    /* Apple Minimal KPI Cards */
+    /* KPI Metric Cards Grid */
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
     }
 
     .metric-card {
       background: var(--card-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      padding: 20px;
-      border-radius: 18px;
+      padding: 18px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border-color);
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.2s ease-in-out;
     }
 
     .metric-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .metric-info p { 
-      font-size: 11px; 
-      color: var(--text-secondary); 
-      font-weight: 600; 
+      font-size: 10px; 
+      color: var(--text-muted); 
+      font-weight: 800; 
       text-transform: uppercase; 
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
     }
-    
     .metric-info h2 { 
-      font-size: 28px; 
-      font-weight: 700; 
-      color: #ffffff; 
-      margin-top: 6px; 
-      letter-spacing: -0.5px;
+      font-size: 26px; 
+      font-weight: 800; 
+      color: var(--text-main); 
+      margin-top: 4px; 
     }
 
     .metric-icon { 
       width: 46px; 
       height: 46px; 
-      border-radius: 14px; 
+      border-radius: 12px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      font-size: 18px; 
+      font-size: 20px; 
     }
 
-    .icon-total { background: rgba(10, 132, 255, 0.12); color: var(--apple-blue); }
-    .icon-issued { background: var(--apple-green-bg); color: var(--apple-green); }
-    .icon-pending { background: var(--apple-red-bg); color: var(--apple-red); }
-    .icon-action { background: var(--apple-yellow-bg); color: var(--apple-yellow); }
+    .icon-total { background: #e0f2fe; color: #0284c7; }
+    .icon-issued { background: var(--success-bg); color: var(--success); }
+    .icon-pending { background: var(--danger-bg); color: var(--danger); }
+    .icon-action { background: #fef3c7; color: #d97706; }
 
     /* Main Table Container Card */
     .main-card {
       background: var(--card-bg);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border-radius: 20px;
-      padding: 22px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
     }
 
     .filter-bar { 
       display: flex; 
       flex-direction: column;
       gap: 12px; 
-      margin-bottom: 20px; 
+      margin-bottom: 18px; 
     }
-    
-    .filter-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .filter-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 
     .search-wrapper { position: relative; width: 100%; }
     .search-wrapper i { 
       position: absolute; 
-      left: 16px; 
+      left: 14px; 
       top: 50%; 
       transform: translateY(-50%); 
-      color: var(--text-secondary); 
+      color: var(--text-muted); 
       font-size: 14px;
     }
     
     .search-input {
       width: 100%; 
-      padding: 12px 16px 12px 42px; 
-      border: 1px solid var(--card-border); 
-      border-radius: 12px; 
-      font-size: 13.5px; 
+      padding: 12px 14px 12px 38px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 10px; 
+      font-size: 13px; 
       outline: none; 
-      background: rgba(0, 0, 0, 0.3);
-      color: #ffffff;
-      transition: all 0.2s;
-    }
-
-    .search-input:focus {
-      border-color: var(--apple-blue);
-      box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+      background: #f8fafc;
+      color: var(--text-main);
+      font-weight: 500;
     }
 
     .select-filter { 
       width: 100%;
-      padding: 12px 16px; 
-      border: 1px solid var(--card-border); 
-      border-radius: 12px; 
-      font-size: 13.5px; 
+      padding: 12px 14px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 10px; 
+      font-size: 13px; 
       outline: none; 
-      background: rgba(0, 0, 0, 0.3); 
-      color: #ffffff; 
-      cursor: pointer;
+      background: #f8fafc; 
+      color: var(--text-main); 
+      font-weight: 600; 
     }
 
-    .select-filter option {
-      background-color: #161b22;
-      color: #ffffff;
-    }
-
-    /* OnePlus Signature Red Button */
     .btn-export { 
       width: 100%;
       justify-content: center;
-      background: var(--oneplus-red); 
+      background: var(--text-main); 
       color: #ffffff; 
       border: none; 
-      padding: 12px 20px; 
-      border-radius: 12px; 
+      padding: 12px; 
+      border-radius: 10px; 
       font-size: 13px; 
-      font-weight: 600; 
+      font-weight: 700; 
       cursor: pointer; 
       display: flex; 
       align-items: center; 
       gap: 8px; 
-      transition: background 0.2s;
     }
 
-    .btn-export:hover {
-      background: var(--oneplus-red-hover);
-    }
-
-    /* Table Design */
+    /* Table Mobile Responsive Scroll */
     .table-container { 
       overflow-x: auto; 
-      border-radius: 14px; 
-      border: 1px solid var(--card-border); 
+      border-radius: 12px; 
+      border: 1px solid var(--border-color); 
+      -webkit-overflow-scrolling: touch;
     }
     
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 540px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 520px; }
     
-    thead tr { background-color: rgba(255, 255, 255, 0.03); }
-    th { padding: 14px 18px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-    td { padding: 14px 18px; border-bottom: 1px solid var(--card-border); vertical-align: middle; color: var(--text-primary); }
+    thead tr { background-color: #f8fafc; }
+    th { padding: 14px 16px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
 
     .btn-vehicle {
-      background: rgba(10, 132, 255, 0.1); 
-      color: var(--apple-blue); 
-      font-weight: 600; 
+      background: #eff6ff; 
+      color: #2563eb; 
+      font-weight: 700; 
       padding: 6px 12px; 
       border-radius: 8px; 
-      border: 1px solid rgba(10, 132, 255, 0.2); 
+      border: 1px solid #bfdbfe; 
       font-size: 12px;
       display: inline-flex;
       align-items: center;
@@ -302,67 +271,63 @@
     }
 
     .btn-view {
-      background: rgba(255, 255, 255, 0.06); 
-      color: #e6edf3; 
-      font-weight: 500; 
+      background: #f1f5f9; 
+      color: #334155; 
+      font-weight: 600; 
       padding: 6px 12px; 
       border-radius: 8px; 
-      border: 1px solid var(--card-border); 
-      font-size: 12px;
+      border: 1px solid #cbd5e1; 
+      font-size: 11px;
       cursor: pointer;
-      transition: background 0.2s;
     }
-
-    .btn-view:hover { background: rgba(255, 255, 255, 0.12); }
 
     .badge { 
-      padding: 5px 12px; 
+      padding: 5px 10px; 
       border-radius: 20px; 
       font-size: 11px; 
-      font-weight: 600; 
+      font-weight: 700; 
       display: inline-flex; 
       align-items: center; 
-      gap: 6px; 
+      gap: 5px; 
+      white-space: nowrap;
     }
-    .badge-issued { background-color: var(--apple-green-bg); color: var(--apple-green); border: 1px solid rgba(48, 209, 88, 0.2); }
-    .badge-pending { background-color: var(--apple-red-bg); color: var(--apple-red); border: 1px solid rgba(255, 69, 58, 0.2); }
-    .badge-warning { background-color: var(--apple-yellow-bg); color: var(--apple-yellow); border: 1px solid rgba(255, 214, 10, 0.2); }
+    .badge-issued { background-color: var(--success-bg); color: #047857; }
+    .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
+    .badge-warning { background-color: #fef3c7; color: #b45309; }
 
-    /* Modal Styling */
+    /* Detail Modal Overlay */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8); 
-      backdrop-filter: blur(8px); 
+      background: rgba(15, 23, 42, 0.75); 
+      backdrop-filter: blur(4px); 
       display: none; 
       align-items: center; 
       justify-content: center; 
       z-index: 1000;
-      padding: 16px;
+      padding: 14px;
     }
 
     .modal-card { 
-      background: #161b22; 
+      background: #ffffff; 
       width: 100%; 
       max-width: 520px; 
-      border-radius: 22px; 
+      border-radius: 18px; 
       overflow: hidden; 
-      border: 1px solid var(--card-border);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); 
+      box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.25); 
     }
 
     .modal-header { 
-      background: rgba(255, 255, 255, 0.03); 
+      background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%); 
       color: white; 
-      padding: 18px 24px; 
+      padding: 16px 20px; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      border-bottom: 1px solid var(--card-border);
     }
-    .modal-header h3 { font-size: 16px; font-weight: 600; }
+    .modal-header h3 { font-size: 16px; font-weight: 700; }
 
     .close-modal { 
-      background: rgba(255,255,255,0.1); 
+      background: rgba(255,255,255,0.15); 
       border: none; 
       color: white; 
       width: 30px; 
@@ -372,27 +337,29 @@
       cursor: pointer;
     }
 
-    .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; }
-    .detail-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .modal-body { padding: 18px; max-height: 75vh; overflow-y: auto; }
+    .detail-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
     
     .detail-item { 
-      background: rgba(0, 0, 0, 0.25); 
-      padding: 12px 14px; 
-      border-radius: 10px; 
-      border: 1px solid var(--card-border); 
+      background: #f8fafc; 
+      padding: 10px 12px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
     }
-    .detail-label { font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; }
-    .detail-value { font-size: 13.5px; color: #ffffff; font-weight: 600; margin-top: 4px; word-break: break-word; }
+    .detail-label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+    .detail-value { font-size: 13px; color: var(--text-main); font-weight: 700; margin-top: 2px; word-break: break-word; }
 
-    #loader { text-align: center; padding: 40px 10px; color: var(--oneplus-red); font-weight: 600; font-size: 15px; }
+    #loader { text-align: center; padding: 40px 10px; color: var(--primary); font-weight: 700; font-size: 14px; }
 
+    /* Desktop Adjustments */
     @media (min-width: 768px) {
-      body { padding: 32px; }
+      body { padding: 32px 24px; }
+      .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
       .filter-bar { flex-direction: row; justify-content: space-between; }
       .filter-group { flex-direction: row; width: auto; }
-      .search-wrapper { width: 320px; }
+      .search-wrapper { width: 300px; }
       .btn-export { width: auto; }
-      .detail-grid { grid-template-columns: repeat(2, 1fr); }
+      .detail-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     }
   </style>
 </head>
@@ -400,37 +367,41 @@
 
   <div class="container">
     
-    <!-- Apple + OnePlus Style Header -->
+    <!-- Custom Header Section -->
     <div class="dashboard-header">
       <div class="header-left">
-        <img src="https://ui-avatars.com/api/?name=Admin+Dashboard&background=eb0029&color=fff&size=128" alt="Profile" class="user-avatar" id="userAvatar">
+        <!-- 🖼️ Aapki Profile / Logo Image -->
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Profile" class="user-avatar" id="userAvatar">
+        
         <div class="header-title-box">
-          <h1>⚡ Vehicle Onboarding Dashboard</h1>
-          <p>Managed by <strong>Aapka Naam</strong> • Powered by Real-time Sync 🚀</p>
+          <!-- ✏️ Change Your Name / Title Here -->
+          <h1>🚛 Vehicle Onboarding Dashboard</h1>
+          <!-- ✏️ Change Subtitle / Description Lines Here -->
+          <p>Managed by <strong>Aapka Naam</strong> • Real-time Sync Active ⚡</p>
         </div>
       </div>
 
       <div class="header-right">
         <div class="header-badge">
-          <span class="dot"></span> Live Sync Active
+          <span class="dot"></span> Live Sheet Sync
         </div>
       </div>
     </div>
 
-    <!-- Apple Minimal Metric Cards Grid -->
+    <!-- KPI Metric Cards Grid with Emojis -->
     <div class="metrics-grid">
       <div class="metric-card" onclick="filterByCard('ALL')">
         <div class="metric-info">
-          <p>Total Cases 📊</p>
+          <p>Total Cases 📁</p>
           <h2 id="totalCases">0</h2>
         </div>
-        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-open"></i></div>
+        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-closed"></i></div>
       </div>
 
       <div class="metric-card" onclick="filterByCard('ISSUED')">
         <div class="metric-info">
-          <p>Issued ✨</p>
-          <h2 id="issuedCount" style="color: var(--apple-green);">0</h2>
+          <p>Issued 🎉</p>
+          <h2 id="issuedCount" style="color: var(--success);">0</h2>
         </div>
         <div class="metric-icon icon-issued"><i class="fa-solid fa-circle-check"></i></div>
       </div>
@@ -438,21 +409,21 @@
       <div class="metric-card" onclick="filterByCard('PENDING')">
         <div class="metric-info">
           <p>Pending ⏳</p>
-          <h2 id="pendingCount" style="color: var(--apple-red);">0</h2>
+          <h2 id="pendingCount" style="color: var(--danger);">0</h2>
         </div>
-        <div class="metric-icon icon-pending"><i class="fa-solid fa-circle-exclamation"></i></div>
+        <div class="metric-icon icon-pending"><i class="fa-solid fa-triangle-exclamation"></i></div>
       </div>
 
       <div class="metric-card" onclick="filterByCard('NEED_ACTION')">
         <div class="metric-info">
           <p>Need Action 🛠️</p>
-          <h2 id="actionableCount" style="color: var(--apple-yellow);">0</h2>
+          <h2 id="actionableCount" style="color: var(--warning);">0</h2>
         </div>
-        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt"></i></div>
+        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt-lightning"></i></div>
       </div>
     </div>
 
-    <!-- Main Table Container Card -->
+    <!-- Main Data Table Container -->
     <div class="main-card">
       <div class="filter-bar">
         <div class="filter-group">
@@ -513,14 +484,14 @@
       const script = document.createElement('script');
       script.src = API_URL + "?callback=handleDataResponse";
       script.onerror = function() {
-        document.getElementById('loader').innerHTML = "<span style='color:var(--apple-red);'>Script Load Failed! Web App URL check karein.</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script Load Failed! Web App URL check karein.</span>";
       };
       document.body.appendChild(script);
     }
 
     function handleDataResponse(data) {
       if (!data || data.length === 0 || data.error) {
-        document.getElementById('loader').innerHTML = "<span style='color:var(--apple-red);'>Sheet me data nahi mila!</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Sheet me data nahi mila!</span>";
         return;
       }
 
@@ -622,7 +593,7 @@
       tbody.innerHTML = '';
 
       if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--text-secondary);">No matching records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No matching records found.</td></tr>`;
         return;
       }
 
