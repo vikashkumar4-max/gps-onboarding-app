@@ -5,71 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vehicle Process Dashboard</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #f4f7fe; color: #333; padding: 20px; }
     
-    header { margin-bottom: 25px; }
-    header h1 { color: #1b2559; font-size: 28px; }
-    header p { color: #a3edd6; color: #707ebe; font-size: 14px; }
+    header { margin-bottom: 20px; }
+    header h1 { color: #1b2559; font-size: 26px; }
+    header p { color: #707ebe; font-size: 14px; }
 
-    /* Dashboard Cards */
-    .metrics-container { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px; }
-    .card { background: white; padding: 20px; border-radius: 12px; flex: 1; min-width: 200px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .card p { font-size: 14px; color: #a3edd6; color: #707ebe; font-weight: 600; margin-bottom: 8px; }
-    .card h2 { font-size: 28px; color: #1b2559; }
+    /* Cards */
+    .metrics-container { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+    .card { background: white; padding: 18px; border-radius: 10px; flex: 1; min-width: 180px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .card p { font-size: 12px; color: #707ebe; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+    .card h2 { font-size: 26px; color: #1b2559; }
 
-    /* Search & Table Section */
-    .data-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .controls { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .search-box { padding: 10px 15px; width: 300px; border: 1px solid #e0e5f2; border-radius: 8px; font-size: 14px; outline: none; }
+    /* Controls & Table */
+    .data-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .controls { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .search-box { padding: 8px 14px; width: 280px; border: 1px solid #dce2f0; border-radius: 6px; font-size: 14px; outline: none; }
     .search-box:focus { border-color: #4318ff; }
 
     .table-responsive { overflow-x: auto; max-height: 500px; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-    th { background-color: #f7f9fc; color: #1b2559; padding: 14px; font-weight: 600; position: sticky; top: 0; border-bottom: 2px solid #e0e5f2; }
-    td { padding: 12px 14px; border-bottom: 1px solid #e0e5f2; color: #2b3674; white-space: nowrap; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { background-color: #f7f9fc; color: #1b2559; padding: 12px; font-weight: 600; position: sticky; top: 0; border-bottom: 2px solid #e0e5f2; white-space: nowrap; }
+    td { padding: 10px 12px; border-bottom: 1px solid #e0e5f2; color: #2b3674; white-space: nowrap; }
     tr:hover { background-color: #f8f9ff; }
 
-    /* Status Badges */
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    /* Badges */
+    .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; }
     .badge-success { background-color: #e6f9f0; color: #05cd99; }
     .badge-danger { background-color: #ffe5e5; color: #ff5630; }
     .badge-warning { background-color: #fff8e5; color: #ffab00; }
 
-    #loader { text-align: center; padding: 40px; font-size: 16px; color: #4318ff; font-weight: 600; }
+    #loader { text-align: center; padding: 30px; font-size: 15px; color: #4318ff; font-weight: 600; }
   </style>
 </head>
 <body>
 
   <header>
     <h1>Process App Dashboard</h1>
-    <p>Live Google Sheets Data Integration</p>
+    <p>Live Google Sheets Data</p>
   </header>
 
-  <!-- KPI Cards -->
+  <!-- Metrics Cards -->
   <div class="metrics-container">
     <div class="card">
-      <p>TOTAL RECORDS</p>
+      <p>Total Records</p>
       <h2 id="totalCount">0</h2>
     </div>
     <div class="card">
-      <p>CERTIFICATE ISSUED</p>
+      <p>Certificate Issued</p>
       <h2 id="issuedCount" style="color: #05cd99;">0</h2>
     </div>
     <div class="card">
-      <p>DEBOARDED / OTHER</p>
+      <p>Deboarded / Other</p>
       <h2 id="deboardedCount" style="color: #ff5630;">0</h2>
     </div>
   </div>
 
-  <!-- Data Table Section -->
+  <!-- Data Table -->
   <div class="data-section">
     <div class="controls">
       <h3>Vehicle Records</h3>
       <input type="text" id="searchInput" class="search-box" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="filterTable()">
     </div>
 
-    <div id="loader">Data Load Ho Raha Hai, Kripya Intazar Karein...</div>
+    <div id="loader">Data Sync Ho Raha Hai...</div>
 
     <div class="table-responsive">
       <table id="dataTable" style="display: none;">
@@ -82,25 +82,27 @@
   </div>
 
   <script>
-    // ⚠️ YAHAN APNA GOOGLE APPS SCRIPT WEB APP URL PASTE KAREIN
+    // ⚠️ APNI URL ISME PASTE KAREIN
     const API_URL = "https://script.google.com/a/macros/wheelseye.com/s/AKfycbyJaVHdnKrndY3VfHY7-SHQFREsCt2qUIHjvHWXrJZo9mVS4qdfGrdcVX-JEh2jfBQw/exec";
 
     let rawData = [];
 
     async function fetchData() {
+      const loader = document.getElementById('loader');
       try {
         const response = await fetch(API_URL);
-        rawData = await response.json();
+        const textData = await response.text(); // Raw text fetch
+        rawData = JSON.parse(textData); // Parse JSON safely
 
-        if (!rawData || rawData.length === 0) {
-          document.getElementById('loader').innerText = "Koi data nahi mila!";
+        if (!Array.isArray(rawData) || rawData.length === 0) {
+          loader.innerText = "Sheet me koi data nahi mil paya!";
           return;
         }
 
         renderDashboard(rawData);
       } catch (error) {
-        console.error("Data load karne me error aayi:", error);
-        document.getElementById('loader').innerText = "Data Load Nahi Ho Paya! Check API URL.";
+        console.error("Fetch Error:", error);
+        loader.innerHTML = "<span style='color:red;'>Data Fetch Failed! Please check internet or refresh.</span>";
       }
     }
 
@@ -115,9 +117,10 @@
       let deboarded = 0;
 
       data.forEach(item => {
-        const remarks = (item['Remarks'] || item['PORTAL/REMARKS'] || '').toString().toLowerCase();
-        if (remarks.includes('issued')) issued++;
-        else if (remarks.includes('deboarded') || remarks.includes('mins')) deboarded++;
+        // Find 'Remarks' column smartly
+        const remarksVal = (item['Remarks'] || item['REMARKS'] || item['Portal'] || '').toString().toLowerCase();
+        if (remarksVal.includes('issued')) issued++;
+        else if (remarksVal.includes('deboarded') || remarksVal.includes('mins')) deboarded++;
       });
 
       document.getElementById('issuedCount').innerText = issued;
@@ -133,7 +136,7 @@
         headerTr.appendChild(th);
       });
 
-      // 3. Render Rows
+      // 3. Render Table
       renderTableRows(data, headers);
     }
 
@@ -147,18 +150,25 @@
           const td = document.createElement('td');
           let val = row[header] !== undefined ? row[header] : '';
 
-          // Format status badge if column is 'Remarks'
+          // Date formatting if ISO String
+          if (typeof val === 'string' && val.includes('T') && val.includes('Z') && val.length > 15) {
+            val = val.split('T')[0];
+          }
+
+          // Smart Badges for Remarks
           if (header.toLowerCase().includes('remark')) {
             const strVal = val.toString();
             if (strVal.toLowerCase().includes('issued')) {
               td.innerHTML = `<span class="badge badge-success">${strVal}</span>`;
             } else if (strVal.toLowerCase().includes('deboarded')) {
               td.innerHTML = `<span class="badge badge-danger">${strVal}</span>`;
-            } else {
+            } else if (strVal.trim() !== '') {
               td.innerHTML = `<span class="badge badge-warning">${strVal}</span>`;
+            } else {
+              td.innerText = '-';
             }
           } else {
-            td.innerText = val;
+            td.innerText = val !== '' ? val : '-';
           }
 
           tr.appendChild(td);
@@ -167,20 +177,22 @@
       });
     }
 
-    // Live Search Functionality
+    // Filter Logic
     function filterTable() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const filteredData = rawData.filter(row => {
         return Object.values(row).some(val => 
-          val.toString().toLowerCase().includes(query)
+          val !== null && val !== undefined && val.toString().toLowerCase().includes(query)
         );
       });
       
-      const headers = Object.keys(rawData[0]);
-      renderTableRows(filteredData, headers);
+      if(rawData.length > 0) {
+        const headers = Object.keys(rawData[0]);
+        renderTableRows(filteredData, headers);
+      }
     }
 
-    // Initialize Dashboard
+    // Load Data
     fetchData();
   </script>
 </body>
