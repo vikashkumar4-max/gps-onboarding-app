@@ -3,197 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vehicle Process Dashboard</title>
+  <title>Process App Dashboard</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
     body { background-color: #f4f7fe; color: #333; padding: 20px; }
     
     header { margin-bottom: 20px; }
-    header h1 { color: #1b2559; font-size: 26px; }
-    header p { color: #707ebe; font-size: 14px; }
+    header h1 { color: #1b2559; font-size: 24px; }
 
-    /* Cards */
     .metrics-container { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
-    .card { background: white; padding: 18px; border-radius: 10px; flex: 1; min-width: 180px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .card p { font-size: 12px; color: #707ebe; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-    .card h2 { font-size: 26px; color: #1b2559; }
+    .card { background: white; padding: 15px; border-radius: 8px; flex: 1; min-width: 180px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .card p { font-size: 12px; color: #707ebe; font-weight: bold; }
+    .card h2 { font-size: 24px; color: #1b2559; margin-top: 5px; }
 
-    /* Controls & Table */
-    .data-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .controls { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .search-box { padding: 8px 14px; width: 280px; border: 1px solid #dce2f0; border-radius: 6px; font-size: 14px; outline: none; }
-    .search-box:focus { border-color: #4318ff; }
+    .data-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .controls { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .search-box { padding: 8px 12px; width: 250px; border: 1px solid #ccc; border-radius: 5px; }
 
     .table-responsive { overflow-x: auto; max-height: 500px; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-    th { background-color: #f7f9fc; color: #1b2559; padding: 12px; font-weight: 600; position: sticky; top: 0; border-bottom: 2px solid #e0e5f2; white-space: nowrap; }
-    td { padding: 10px 12px; border-bottom: 1px solid #e0e5f2; color: #2b3674; white-space: nowrap; }
-    tr:hover { background-color: #f8f9ff; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background-color: #007bff; color: white; padding: 10px; text-align: left; position: sticky; top: 0; }
+    td { padding: 10px; border-bottom: 1px solid #ddd; white-space: nowrap; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
 
-    /* Badges */
-    .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; }
-    .badge-success { background-color: #e6f9f0; color: #05cd99; }
-    .badge-danger { background-color: #ffe5e5; color: #ff5630; }
-    .badge-warning { background-color: #fff8e5; color: #ffab00; }
-
-    #loader { text-align: center; padding: 30px; font-size: 15px; color: #4318ff; font-weight: 600; }
+    #loader { text-align: center; padding: 30px; font-weight: bold; color: #007bff; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>MANU Dashboard</h1>
-    <p>Live STATE Data</p>
+    <h1>Process App Dashboard</h1>
   </header>
 
-  <!-- Metrics Cards -->
   <div class="metrics-container">
     <div class="card">
-      <p>Total Records</p>
+      <p>TOTAL RECORDS</p>
       <h2 id="totalCount">0</h2>
     </div>
     <div class="card">
-      <p>Certificate Issued</p>
-      <h2 id="issuedCount" style="color: #05cd99;">0</h2>
+      <p>CERTIFICATE ISSUED</p>
+      <h2 id="issuedCount" style="color: green;">0</h2>
     </div>
     <div class="card">
-      <p>Deboarded / Other</p>
-      <h2 id="deboardedCount" style="color: #ff5630;">0</h2>
+      <p>OTHER / DEBOARDED</p>
+      <h2 id="deboardedCount" style="color: red;">0</h2>
     </div>
   </div>
 
-  <!-- Data Table -->
   <div class="data-section">
     <div class="controls">
-      <h3>Vehicle Records</h3>
-      <input type="text" id="searchInput" class="search-box" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="filterTable()">
+      <h3>Vehicle Data</h3>
+      <input type="text" id="searchInput" class="search-box" placeholder="Search..." onkeyup="filterTable()">
     </div>
 
-    <div id="loader">Data Sync Ho Raha Hai...</div>
+    <div id="loader">Data Load Ho Raha Hai...</div>
 
     <div class="table-responsive">
-      <table id="dataTable" style="display: none;">
-        <thead>
-          <tr id="tableHeaders"></tr>
-        </thead>
+      <table id="dataTable" style="display:none;">
+        <thead><tr id="tableHeaders"></tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
   </div>
 
   <script>
-    // ⚠️ APNI URL ISME PASTE KAREIN
-    const API_URL = "https://script.google.com/a/macros/wheelseye.com/s/AKfycbyJaVHdnKrndY3VfHY7-SHQFREsCt2qUIHjvHWXrJZo9mVS4qdfGrdcVX-JEh2jfBQw/exec";
+    // ⚠️ YAHAN APNA NAYA WEB APP URL PASTE KAREIN
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAx6Hm5-dwsSbfdUdu63tw3JP1cz1SXg0wscgFT5GpeKXKcCr9dxvIx3kzf4opJgy0/exec";
 
     let rawData = [];
 
-    async function fetchData() {
-      const loader = document.getElementById('loader');
-      try {
-        const response = await fetch(API_URL);
-        const textData = await response.text(); // Raw text fetch
-        rawData = JSON.parse(textData); // Parse JSON safely
-
-        if (!Array.isArray(rawData) || rawData.length === 0) {
-          loader.innerText = "Sheet me koi data nahi mil paya!";
-          return;
-        }
-
-        renderDashboard(rawData);
-      } catch (error) {
-        console.error("Fetch Error:", error);
-        loader.innerHTML = "<span style='color:red;'>Data Fetch Failed! Please check internet or refresh.</span>";
-      }
+    // JSONP Technique to Bypass CORS Block
+    function loadDataJSONP() {
+      const script = document.createElement('script');
+      script.src = SCRIPT_URL + "?callback=handleData";
+      document.body.appendChild(script);
     }
 
-    function renderDashboard(data) {
+    // Callback Function executed when data arrives
+    function handleData(data) {
+      if (!data || data.length === 0) {
+        document.getElementById('loader').innerText = "Sheet me koi data nahi mila!";
+        return;
+      }
+
+      rawData = data;
       document.getElementById('loader').style.display = 'none';
       document.getElementById('dataTable').style.display = 'table';
 
-      // 1. Update Metrics
+      // 1. Metrics Update
       document.getElementById('totalCount').innerText = data.length;
-
-      let issued = 0;
-      let deboarded = 0;
+      let issued = 0, deboarded = 0;
 
       data.forEach(item => {
-        // Find 'Remarks' column smartly
-        const remarksVal = (item['Remarks'] || item['REMARKS'] || item['Portal'] || '').toString().toLowerCase();
-        if (remarksVal.includes('issued')) issued++;
-        else if (remarksVal.includes('deboarded') || remarksVal.includes('mins')) deboarded++;
+        let remarks = (item['Remarks'] || item['Portal'] || '').toString().toLowerCase();
+        if (remarks.includes('issued')) issued++;
+        else if (remarks.includes('deboarded') || remarks.includes('mins')) deboarded++;
       });
 
       document.getElementById('issuedCount').innerText = issued;
       document.getElementById('deboardedCount').innerText = deboarded;
 
-      // 2. Render Headers
+      // 2. Render Table Headers
       const headers = Object.keys(data[0]);
       const headerTr = document.getElementById('tableHeaders');
       headerTr.innerHTML = '';
-      headers.forEach(header => {
+      headers.forEach(h => {
         const th = document.createElement('th');
-        th.innerText = header;
+        th.innerText = h;
         headerTr.appendChild(th);
       });
 
-      // 3. Render Table
-      renderTableRows(data, headers);
+      // 3. Render Rows
+      renderRows(data, headers);
     }
 
-    function renderTableRows(data, headers) {
+    function renderRows(data, headers) {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
 
       data.forEach(row => {
         const tr = document.createElement('tr');
-        headers.forEach(header => {
+        headers.forEach(h => {
           const td = document.createElement('td');
-          let val = row[header] !== undefined ? row[header] : '';
-
-          // Date formatting if ISO String
-          if (typeof val === 'string' && val.includes('T') && val.includes('Z') && val.length > 15) {
+          let val = row[h] !== undefined ? row[h] : '';
+          if (typeof val === 'string' && val.includes('T') && val.includes('Z')) {
             val = val.split('T')[0];
           }
-
-          // Smart Badges for Remarks
-          if (header.toLowerCase().includes('remark')) {
-            const strVal = val.toString();
-            if (strVal.toLowerCase().includes('issued')) {
-              td.innerHTML = `<span class="badge badge-success">${strVal}</span>`;
-            } else if (strVal.toLowerCase().includes('deboarded')) {
-              td.innerHTML = `<span class="badge badge-danger">${strVal}</span>`;
-            } else if (strVal.trim() !== '') {
-              td.innerHTML = `<span class="badge badge-warning">${strVal}</span>`;
-            } else {
-              td.innerText = '-';
-            }
-          } else {
-            td.innerText = val !== '' ? val : '-';
-          }
-
+          td.innerText = val;
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
       });
     }
 
-    // Filter Logic
     function filterTable() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filteredData = rawData.filter(row => {
-        return Object.values(row).some(val => 
-          val !== null && val !== undefined && val.toString().toLowerCase().includes(query)
-        );
-      });
-      
-      if(rawData.length > 0) {
-        const headers = Object.keys(rawData[0]);
-        renderTableRows(filteredData, headers);
-      }
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = rawData.filter(row => 
+        Object.values(row).some(v => v.toString().toLowerCase().includes(q))
+      );
+      if (rawData.length > 0) renderRows(filtered, Object.keys(rawData[0]));
     }
 
-    // Load Data
-    fetchData();
+    // Call JSONP Load
+    loadDataJSONP();
   </script>
 </body>
 </html>
