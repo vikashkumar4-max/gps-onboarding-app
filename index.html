@@ -113,7 +113,7 @@
       width: 8px; height: 8px; background: #05cd99; border-radius: 50%; box-shadow: 0 0 10px #05cd99;
     }
 
-    /* Ultra-Rich KPI Metric Cards Grid */
+    /* KPI Metric Cards Grid */
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -140,10 +140,6 @@
       transform: translateY(-6px);
       box-shadow: var(--shadow-lg);
       border-color: rgba(67, 24, 255, 0.4);
-    }
-
-    .metric-card:active {
-      transform: translateY(-2px);
     }
 
     .metric-info p { 
@@ -237,6 +233,7 @@
       color: var(--text-main); 
       font-weight: 600; 
       cursor: pointer;
+      max-width: 320px;
       transition: all 0.2s;
     }
     .select-filter:focus { border-color: var(--primary); background: #ffffff; }
@@ -291,7 +288,6 @@
     tbody tr:hover { background-color: #f8fafc; }
     tbody tr:last-child td { border-bottom: none; }
 
-    /* Custom Buttons inside Table */
     .btn-vehicle {
       background: var(--primary-light); 
       color: var(--primary); 
@@ -329,7 +325,6 @@
     }
     .btn-view:hover { background: #e2e8f0; color: #0f172a; }
 
-    /* Modern Pills Badges */
     .badge { 
       padding: 6px 12px; 
       border-radius: 30px; 
@@ -343,7 +338,7 @@
     .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
     .badge-warning { background-color: var(--warning-bg); color: #b45309; }
 
-    /* Rich Glassmorphism Detail Modal */
+    /* Modal Detail Overlay */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(15, 23, 42, 0.6); 
@@ -352,10 +347,7 @@
       align-items: center; 
       justify-content: center; 
       z-index: 1000;
-      animation: fadeIn 0.2s ease-out;
     }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     .modal-card { 
       background: #ffffff; 
@@ -386,7 +378,6 @@
       border-radius: 50%; 
       cursor: pointer; 
       font-size: 18px; 
-      transition: background 0.2s;
     }
     .close-modal:hover { background: rgba(255,255,255,0.25); }
 
@@ -411,15 +402,15 @@
     <!-- Header -->
     <div class="dashboard-header">
       <div>
-        <h1><i class="fa-solid fa-truck-monster"></i> Mratyunjay Dashboard</h1>
-        <p>CHECK REAL TIME STATUS WITH MRATYUNJAY WORLD</p>
+        <h1><i class="fa-solid fa-truck-monster"></i> Vehicle Onboarding Dashboard</h1>
+        <p>Real-time Google Sheet Syncing System</p>
       </div>
       <div class="header-badge">
         <span class="dot"></span> Live Sync Active
       </div>
     </div>
 
-    <!-- Interactive KPI Cards -->
+    <!-- KPI Metric Cards -->
     <div class="metrics-grid">
       <div class="metric-card" onclick="filterByCard('ALL')" title="Click to view all cases">
         <div class="metric-info">
@@ -462,11 +453,14 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="applyFilters()">
           </div>
+          
+          <!-- Dynamic Select Dropdown -->
           <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
             <option value="ALL">All Status / Remarks</option>
             <option value="ISSUED">Certificate Issued</option>
             <option value="PENDING">Total Pending</option>
             <option value="NEED_ACTION">Need Action (3 Specific Conditions)</option>
+            <!-- Sheet ke saare unique remarks yahan auto-add ho jayenge -->
           </select>
         </div>
         <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
@@ -529,6 +523,7 @@
       rawData = data;
       currentFilteredData = rawData;
 
+      populateRemarkFilter(rawData); // Dynamically populate dropdown
       calculateMetrics(rawData);
       renderTable(rawData);
 
@@ -556,6 +551,36 @@
       return '';
     }
 
+    // Sheet ke saare Unique Remarks ko Select Options me include karne ka function
+    function populateRemarkFilter(data) {
+      const dropdown = document.getElementById('remarkFilter');
+      
+      // Basic Static Options preserved
+      let optionsHTML = `
+        <option value="ALL">All Status / Remarks</option>
+        <option value="ISSUED">Certificate Issued</option>
+        <option value="PENDING">Total Pending</option>
+        <option value="NEED_ACTION">Need Action (3 Specific Conditions)</option>
+        <option disabled>────────── Sheet Remarks ──────────</option>
+      `;
+
+      const uniqueRemarks = new Set();
+
+      data.forEach(row => {
+        let remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']);
+        if (remark && remark.toString().trim() !== '') {
+          uniqueRemarks.add(remark.toString().trim());
+        }
+      });
+
+      // Sort alphabetically and add to dropdown
+      Array.from(uniqueRemarks).sort().forEach(rem => {
+        optionsHTML += `<option value="EXACT:${rem}">${rem}</option>`;
+      });
+
+      dropdown.innerHTML = optionsHTML;
+    }
+
     function getVehicleNumber(row) {
       let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Registration No', 'Vehicle Number', 'Vehicle No', 'Veh No', 'Reg No', 'Vehicle No.']);
       
@@ -578,7 +603,7 @@
       return rem.includes('activation pending') || 
              rem.includes('check not clear') || 
              rem.includes('topup pending') || 
-             rem.includes('topup done');
+             rem.includes('top up pending');
     }
 
     function calculateMetrics(data) {
@@ -680,6 +705,9 @@
           matchesStatus = !remLower.includes('issued') && !remLower.includes('done') && !remLower.includes('completed');
         } else if (statusFilter === 'NEED_ACTION') {
           matchesStatus = isNeedActionStatus(remark);
+        } else if (statusFilter.startsWith('EXACT:')) {
+          let exactVal = statusFilter.replace('EXACT:', '');
+          matchesStatus = (remark.trim() === exactVal);
         }
 
         return matchesSearch && matchesStatus;
