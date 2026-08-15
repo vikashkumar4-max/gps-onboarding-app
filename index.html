@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PAA  Dashboard</title>
+  <title>MANU Certification</title>
   
   <!-- Google Fonts & FontAwesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -426,7 +426,7 @@
       border-collapse: collapse; 
       text-align: left; 
       font-size: 13px; 
-      min-width: 520px; 
+      min-width: 600px; 
     }
     
     thead tr { 
@@ -618,8 +618,9 @@
       body { padding: 32px 24px; }
       .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
       .filter-bar { flex-direction: row; justify-content: space-between; }
-      .filter-group { flex-direction: row; width: auto; }
-      .search-wrapper { width: 300px; }
+      .filter-group { flex-direction: row; width: auto; flex-wrap: wrap; }
+      .search-wrapper { width: 260px; }
+      .select-filter { width: 200px; }
       .btn-export { width: auto; }
       .detail-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     }
@@ -742,8 +743,15 @@
           <div class="filter-group">
             <div class="search-wrapper">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="applyFilters()">
+              <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, Owner, State..." onkeyup="applyFilters()">
             </div>
+            
+            <!-- 📍 STATE FILTER DROPDOWN -->
+            <select id="stateFilter" class="select-filter" onchange="applyFilters()">
+              <option value="ALL">All States</option>
+            </select>
+
+            <!-- ⚡ REMARK STATUS FILTER DROPDOWN -->
             <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
               <option value="ALL">All Status / Remarks</option>
               <option value="ISSUED">Certificate Issued</option>
@@ -762,6 +770,7 @@
               <tr>
                 <th>#</th>
                 <th>Vehicle No.</th>
+                <th>State</th>
                 <th>Status</th>
                 <th>Owner / Company</th>
                 <th>Action</th>
@@ -898,8 +907,8 @@
       if (!data || data.length === 0 || data.error) return;
 
       rawData = data;
+      populateStateFilter(rawData);
       populateRemarkFilter(rawData);
-      calculateMetrics(rawData);
       applyFilters();
 
       document.getElementById('loader').style.display = 'none';
@@ -919,8 +928,33 @@
       return '';
     }
 
+    // 📍 DYNAMIC STATE FILTER POPULATION
+    function populateStateFilter(data) {
+      const dropdown = document.getElementById('stateFilter');
+      const selectedVal = dropdown.value;
+      let optionsHTML = `<option value="ALL">All States</option>`;
+      
+      const uniqueStates = new Set();
+      data.forEach(row => {
+        let state = getStateVal(row);
+        if (state && state.toString().trim() !== '' && state !== '-') {
+          uniqueStates.add(state.toString().trim());
+        }
+      });
+
+      Array.from(uniqueStates).sort().forEach(st => {
+        optionsHTML += `<option value="${st}">${st}</option>`;
+      });
+
+      dropdown.innerHTML = optionsHTML;
+      if (Array.from(uniqueStates).includes(selectedVal)) {
+        dropdown.value = selectedVal;
+      }
+    }
+
     function populateRemarkFilter(data) {
       const dropdown = document.getElementById('remarkFilter');
+      const selectedVal = dropdown.value;
       let optionsHTML = `<option value="ALL">All Status / Remarks</option><option value="ISSUED">Certificate Issued</option><option value="PENDING">Total Pending</option><option value="NEED_ACTION">Need Action</option>`;
       
       const uniqueRemarks = new Set();
@@ -934,6 +968,7 @@
       });
 
       dropdown.innerHTML = optionsHTML;
+      dropdown.value = selectedVal || 'ALL';
     }
 
     // Upgraded Smart Vehicle Reader Logic
@@ -954,11 +989,17 @@
       return foundKey && row[foundKey] ? row[foundKey] : 'N/A';
     }
 
+    // Smart State Reader Logic
+    function getStateVal(row) {
+      return getVal(row, ['State', 'State Name', 'Location', 'Region', 'Zone']) || '-';
+    }
+
     function isNeedActionStatus(remark) {
       let rem = remark.toString().toLowerCase();
       return rem.includes('activation pending') || rem.includes('check not clear') || rem.includes('topup pending');
     }
 
+    // Calculate Dynamic Metrics According to Current Filtered Set
     function calculateMetrics(data) {
       let total = data.length, issued = 0, pending = 0, needAction = 0;
       data.forEach(row => {
@@ -979,12 +1020,13 @@
       tbody.innerHTML = '';
 
       if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No matching records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-muted);">No matching records found.</td></tr>`;
         return;
       }
 
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
+        const stateName = getStateVal(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
         const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Client Name', 'Customer', 'Name']) || '-';
 
@@ -1005,6 +1047,7 @@
               <i class="fa-solid fa-bus"></i> ${vehicleNo}
             </button>
           </td>
+          <td><span style="font-weight: 700; color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="font-size:11px; margin-right:4px;"></i>${stateName}</span></td>
           <td>${remarkBadge}</td>
           <td><strong>${owner}</strong></td>
           <td>
@@ -1025,24 +1068,36 @@
       }
     }
 
+    // Combined Multi-Filter Function (State + Remark + Search)
     function applyFilters() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const statusFilter = document.getElementById('remarkFilter').value;
+      const stateFilter = document.getElementById('stateFilter').value;
 
       currentFilteredData = rawData.filter(row => {
         const matchesSearch = Object.values(row).some(v => v !== null && v !== undefined && v.toString().toLowerCase().includes(query));
         const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
+        const rowState = getStateVal(row).toString();
+        
         let remLower = remark.toLowerCase();
         let matchesStatus = true;
+        let matchesState = true;
 
+        // State Filter Logic
+        if (stateFilter !== 'ALL') {
+          matchesState = (rowState.trim() === stateFilter.trim());
+        }
+
+        // Remarks Status Filter Logic
         if (statusFilter === 'ISSUED') matchesStatus = remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed');
         else if (statusFilter === 'PENDING') matchesStatus = !remLower.includes('issued') && !remLower.includes('done') && !remLower.includes('completed');
         else if (statusFilter === 'NEED_ACTION') matchesStatus = isNeedActionStatus(remark);
         else if (statusFilter.startsWith('EXACT:')) matchesStatus = (remark.trim() === statusFilter.replace('EXACT:', ''));
 
-        return matchesSearch && matchesStatus;
+        return matchesSearch && matchesStatus && matchesState;
       });
 
+      calculateMetrics(currentFilteredData);
       renderTable(currentFilteredData);
     }
 
