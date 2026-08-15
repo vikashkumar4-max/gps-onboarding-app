@@ -27,7 +27,7 @@
       --danger-bg: #fef2f2;
       
       --warning: #f59e0b;
-      --warning-bg: #fffbebf;
+      --warning-bg: #fffbeb; /* Fixed Hex Code */
       
       --border-color: #e2e8f0;
       --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
@@ -38,7 +38,6 @@
     
     body { 
       background-color: var(--bg-color); 
-      /* Subtle Background Texture/Pattern */
       background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
       background-size: 16px 16px;
       color: var(--text-main); 
@@ -51,13 +50,11 @@
       margin: 0 auto;
     }
 
-    /* Personalized Executive Header */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      /* Background Theme Gradient */
       background: linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #3a506b 100%);
       padding: 20px 24px;
       border-radius: 18px;
@@ -73,7 +70,6 @@
       gap: 16px;
     }
 
-    /* Profile / Logo Image Styling */
     .user-avatar {
       width: 52px;
       height: 52px;
@@ -120,7 +116,6 @@
       width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;
     }
 
-    /* KPI Metric Cards Grid */
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -175,7 +170,6 @@
     .icon-pending { background: var(--danger-bg); color: var(--danger); }
     .icon-action { background: #fef3c7; color: #d97706; }
 
-    /* Main Table Container Card */
     .main-card {
       background: var(--card-bg);
       border-radius: 18px;
@@ -242,7 +236,6 @@
       gap: 8px; 
     }
 
-    /* Table Mobile Responsive Scroll */
     .table-container { 
       overflow-x: auto; 
       border-radius: 12px; 
@@ -295,7 +288,6 @@
     .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
     .badge-warning { background-color: #fef3c7; color: #b45309; }
 
-    /* Detail Modal Overlay */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(15, 23, 42, 0.75); 
@@ -351,7 +343,6 @@
 
     #loader { text-align: center; padding: 40px 10px; color: var(--primary); font-weight: 700; font-size: 14px; }
 
-    /* Desktop Adjustments */
     @media (min-width: 768px) {
       body { padding: 32px 24px; }
       .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
@@ -366,21 +357,14 @@
 <body>
 
   <div class="container">
-    
-    <!-- Custom Header Section -->
     <div class="dashboard-header">
       <div class="header-left">
-        <!-- 🖼️ Aapki Profile / Logo Image -->
         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Profile" class="user-avatar" id="userAvatar">
-        
         <div class="header-title-box">
-          <!-- ✏️ Change Your Name / Title Here -->
           <h1>🚛 PAA Dashboard</h1>
-          <!-- ✏️ Change Subtitle / Description Lines Here -->
           <p>Managed by <strong>MRATYUNJAY</strong> • Real-time Sync ⚡</p>
         </div>
       </div>
-
       <div class="header-right">
         <div class="header-badge">
           <span class="dot"></span> Live Sheet Sync
@@ -388,7 +372,6 @@
       </div>
     </div>
 
-    <!-- KPI Metric Cards Grid with Emojis -->
     <div class="metrics-grid">
       <div class="metric-card" onclick="filterByCard('ALL')">
         <div class="metric-info">
@@ -400,7 +383,7 @@
 
       <div class="metric-card" onclick="filterByCard('ISSUED')">
         <div class="metric-info">
-          <p>Certificate Issued </p>
+          <p>Certificate Issued</p>
           <h2 id="issuedCount" style="color: var(--success);">0</h2>
         </div>
         <div class="metric-icon icon-issued"><i class="fa-solid fa-circle-check"></i></div>
@@ -423,7 +406,6 @@
       </div>
     </div>
 
-    <!-- Main Data Table Container -->
     <div class="main-card">
       <div class="filter-bar">
         <div class="filter-group">
@@ -460,7 +442,6 @@
     </div>
   </div>
 
-  <!-- Detail Modal -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -474,7 +455,6 @@
   </div>
 
   <script>
-    // ⚠️ APNA GOOGLE APPS SCRIPT URL HERE PASTE KAREIN
     const API_URL = "https://script.google.com/macros/s/AKfycbyHslvgv_ZLu_tkuxi6Pi3jBxbiCnzTlYSBy6YVoVIg53JBPDqzFXcvtbyjrlAnWiE/exec";
 
     let rawData = [];
