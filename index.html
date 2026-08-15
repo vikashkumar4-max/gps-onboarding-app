@@ -1,720 +1,211 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>live Vehicle Onboarding Dashboard</title>
-  
-  <!-- Google Fonts & FontAwesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Onboarding Dashboard</title>
   <style>
-    :root {
-      /* Theme Custom Palette */
-      --bg-color: #f1f5f9;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --primary-light: #eff6ff;
-      
-      --success: #10b981;
-      --success-bg: #ecfdf5;
-      
-      --danger: #ef4444;
-      --danger-bg: #fef2f2;
-      
-      --warning: #f59e0b;
-      --warning-bg: #fffbebf;
-      
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
-      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f1f5f9; padding: 20px; color: #1e293b; }
     
-    body { 
-      background-color: var(--bg-color); 
-      /* Subtle Background Texture/Pattern */
-      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
-      background-size: 16px 16px;
-      color: var(--text-main); 
-      padding: 16px; 
-      min-height: 100vh; 
-    }
+    /* Header Container */
+    .header { background: #0f172a; color: white; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .header img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #0070f3; }
+    .header-info h2 { font-size: 20px; font-weight: 600; }
+    .header-info p { font-size: 13px; color: #94a3b8; margin-top: 3px; }
 
-    .container {
-      max-width: 1350px;
-      margin: 0 auto;
-    }
+    /* Metrics Cards */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card span { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+    .card h3 { font-size: 28px; margin-top: 5px; }
+    .card.total h3 { color: #0f172a; }
+    .card.issued h3 { color: #10b981; }
+    .card.pending h3 { color: #ef4444; }
 
-    /* Personalized Executive Header */
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      /* Background Theme Gradient */
-      background: linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #3a506b 100%);
-      padding: 20px 24px;
-      border-radius: 18px;
-      color: white;
-      box-shadow: 0 12px 24px -6px rgba(11, 19, 43, 0.3);
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    /* Profile / Logo Image Styling */
-    .user-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 2px solid #38bdf8;
-      object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    .header-title-box h1 { 
-      font-size: 22px; 
-      font-weight: 800; 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-      letter-spacing: -0.3px;
-    }
-
-    .header-title-box p { 
-      font-size: 12.5px; 
-      color: #94a3b8; 
-      margin-top: 3px; 
-      font-weight: 500;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-badge { 
-      background: rgba(255, 255, 255, 0.08); 
-      padding: 8px 14px; 
-      border-radius: 30px; 
-      font-size: 11.5px; 
-      font-weight: 600; 
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .header-badge .dot {
-      width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;
-    }
-
-    /* KPI Metric Cards Grid */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .metric-card {
-      background: var(--card-bg);
-      padding: 18px;
-      border-radius: 16px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid var(--border-color);
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-    }
-
-    .metric-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .metric-info p { 
-      font-size: 10px; 
-      color: var(--text-muted); 
-      font-weight: 800; 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-    }
-    .metric-info h2 { 
-      font-size: 26px; 
-      font-weight: 800; 
-      color: var(--text-main); 
-      margin-top: 4px; 
-    }
-
-    .metric-icon { 
-      width: 46px; 
-      height: 46px; 
-      border-radius: 12px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 20px; 
-    }
-
-    .icon-total { background: #e0f2fe; color: #0284c7; }
-    .icon-issued { background: var(--success-bg); color: var(--success); }
-    .icon-pending { background: var(--danger-bg); color: var(--danger); }
-    .icon-action { background: #fef3c7; color: #d97706; }
-
-    /* Main Table Container Card */
-    .main-card {
-      background: var(--card-bg);
-      border-radius: 18px;
-      padding: 20px;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-color);
-    }
-
-    .filter-bar { 
-      display: flex; 
-      flex-direction: column;
-      gap: 12px; 
-      margin-bottom: 18px; 
-    }
-    .filter-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-
-    .search-wrapper { position: relative; width: 100%; }
-    .search-wrapper i { 
-      position: absolute; 
-      left: 14px; 
-      top: 50%; 
-      transform: translateY(-50%); 
-      color: var(--text-muted); 
-      font-size: 14px;
-    }
+    /* Controls & Table */
+    .main-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .controls input, .controls select { padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
+    .controls input { flex: 1; min-width: 200px; }
     
-    .search-input {
-      width: 100%; 
-      padding: 12px 14px 12px 38px; 
-      border: 1px solid var(--border-color); 
-      border-radius: 10px; 
-      font-size: 13px; 
-      outline: none; 
-      background: #f8fafc;
-      color: var(--text-main);
-      font-weight: 500;
-    }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    th { background: #f8fafc; color: #64748b; font-weight: 600; }
+    .btn-view { background: #0070f3; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .btn-view:hover { background: #0051a8; }
 
-    .select-filter { 
-      width: 100%;
-      padding: 12px 14px; 
-      border: 1px solid var(--border-color); 
-      border-radius: 10px; 
-      font-size: 13px; 
-      outline: none; 
-      background: #f8fafc; 
-      color: var(--text-main); 
-      font-weight: 600; 
-    }
-
-    .btn-export { 
-      width: 100%;
-      justify-content: center;
-      background: var(--text-main); 
-      color: #ffffff; 
-      border: none; 
-      padding: 12px; 
-      border-radius: 10px; 
-      font-size: 13px; 
-      font-weight: 700; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-    }
-
-    /* Table Mobile Responsive Scroll */
-    .table-container { 
-      overflow-x: auto; 
-      border-radius: 12px; 
-      border: 1px solid var(--border-color); 
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 520px; }
-    
-    thead tr { background-color: #f8fafc; }
-    th { padding: 14px 16px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
-    td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-
-    .btn-vehicle {
-      background: #eff6ff; 
-      color: #2563eb; 
-      font-weight: 700; 
-      padding: 6px 12px; 
-      border-radius: 8px; 
-      border: 1px solid #bfdbfe; 
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .btn-view {
-      background: #f1f5f9; 
-      color: #334155; 
-      font-weight: 600; 
-      padding: 6px 12px; 
-      border-radius: 8px; 
-      border: 1px solid #cbd5e1; 
-      font-size: 11px;
-      cursor: pointer;
-    }
-
-    .badge { 
-      padding: 5px 10px; 
-      border-radius: 20px; 
-      font-size: 11px; 
-      font-weight: 700; 
-      display: inline-flex; 
-      align-items: center; 
-      gap: 5px; 
-      white-space: nowrap;
-    }
-    .badge-issued { background-color: var(--success-bg); color: #047857; }
-    .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
-    .badge-warning { background-color: #fef3c7; color: #b45309; }
-
-    /* Detail Modal Overlay */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.75); 
-      backdrop-filter: blur(4px); 
-      display: none; 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 1000;
-      padding: 14px;
-    }
-
-    .modal-card { 
-      background: #ffffff; 
-      width: 100%; 
-      max-width: 520px; 
-      border-radius: 18px; 
-      overflow: hidden; 
-      box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.25); 
-    }
-
-    .modal-header { 
-      background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%); 
-      color: white; 
-      padding: 16px 20px; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-    }
-    .modal-header h3 { font-size: 16px; font-weight: 700; }
-
-    .close-modal { 
-      background: rgba(255,255,255,0.15); 
-      border: none; 
-      color: white; 
-      width: 30px; 
-      height: 30px; 
-      border-radius: 50%; 
-      font-size: 18px; 
-      cursor: pointer;
-    }
-
-    .modal-body { padding: 18px; max-height: 75vh; overflow-y: auto; }
-    .detail-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-    
-    .detail-item { 
-      background: #f8fafc; 
-      padding: 10px 12px; 
-      border-radius: 8px; 
-      border: 1px solid var(--border-color); 
-    }
-    .detail-label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
-    .detail-value { font-size: 13px; color: var(--text-main); font-weight: 700; margin-top: 2px; word-break: break-word; }
-
-    #loader { text-align: center; padding: 40px 10px; color: var(--primary); font-weight: 700; font-size: 14px; }
-
-    /* Desktop Adjustments */
-    @media (min-width: 768px) {
-      body { padding: 32px 24px; }
-      .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-      .filter-bar { flex-direction: row; justify-content: space-between; }
-      .filter-group { flex-direction: row; width: auto; }
-      .search-wrapper { width: 300px; }
-      .btn-export { width: auto; }
-      .detail-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    }
+    /* Modal Styling */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); justify-content: center; align-items: center; }
+    .modal-content { background: white; width: 90%; max-width: 550px; border-radius: 12px; padding: 20px; position: relative; max-height: 85vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
+    .close-btn { font-size: 20px; cursor: pointer; color: #64748b; font-weight: bold; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .detail-card { background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .detail-key { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; }
+    .detail-val { font-size: 13px; font-weight: 600; color: #0f172a; margin-top: 2px; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    
-    <!-- Custom Header Section -->
-    <div class="dashboard-header">
-      <div class="header-left">
-        <!-- 🖼️ Aapki Profile / Logo Image -->
-        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Profile" class="user-avatar" id="userAvatar">
-        
-        <div class="header-title-box">
-          <!-- ✏️ Change Your Name / Title Here -->
-          <h1>🚛 Mratyunjay world</h1>
-          <!-- ✏️ Change Subtitle / Description Lines Here -->
-          <p>Managed by <strong>MRATYUNJAY</strong> • Real-time Sync ⚡</p>
-        </div>
-      </div>
-
-      <div class="header-right">
-        <div class="header-badge">
-          <span class="dot"></span> Live Sheet Sync
-        </div>
-      </div>
-    </div>
-
-    <!-- KPI Metric Cards Grid with Emojis -->
-    <div class="metrics-grid">
-      <div class="metric-card" onclick="filterByCard('ALL')">
-        <div class="metric-info">
-          <p>Total Cases </p>
-          <h2 id="totalCases">0</h2>
-        </div>
-        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-closed"></i></div>
-      </div>
-
-      <div class="metric-card" onclick="filterByCard('ISSUED')">
-        <div class="metric-info">
-          <p>Certificate Issued </p>
-          <h2 id="issuedCount" style="color: var(--success);">0</h2>
-        </div>
-        <div class="metric-icon icon-issued"><i class="fa-solid fa-circle-check"></i></div>
-      </div>
-
-      <div class="metric-card" onclick="filterByCard('PENDING')">
-        <div class="metric-info">
-          <p>Pending ⏳</p>
-          <h2 id="pendingCount" style="color: var(--danger);">0</h2>
-        </div>
-        <div class="metric-icon icon-pending"><i class="fa-solid fa-triangle-exclamation"></i></div>
-      </div>
-
-      <div class="metric-card" onclick="filterByCard('NEED_ACTION')">
-        <div class="metric-info">
-          <p>Need Action 🛠️</p>
-          <h2 id="actionableCount" style="color: var(--warning);">0</h2>
-        </div>
-        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt-lightning"></i></div>
-      </div>
-    </div>
-
-    <!-- Main Data Table Container -->
-    <div class="main-card">
-      <div class="filter-bar">
-        <div class="filter-group">
-          <div class="search-wrapper">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="applyFilters()">
-          </div>
-          <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
-            <option value="ALL">All Status / Remarks</option>
-            <option value="ISSUED">Certificate Issued</option>
-            <option value="PENDING">Total Pending</option>
-            <option value="NEED_ACTION">Need Action</option>
-          </select>
-        </div>
-        <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-      </div>
-
-      <div id="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Dashboard Data...</div>
-
-      <div class="table-container" id="tableWrapper" style="display: none;">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Vehicle No.</th>
-              <th>Status</th>
-              <th>Owner / Company</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
+  <!-- Header Section -->
+  <div class="header">
+    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Avatar">
+    <div class="header-info">
+      <h2>🚛 Mratyunjay world</h2>
+      <p>Managed by MRATYUNJAY • Real-time Sync ⚡</p>
     </div>
   </div>
 
-  <!-- Detail Modal -->
-  <div class="modal-overlay" id="detailModal">
-    <div class="modal-card">
+  <!-- Metrics Grid -->
+  <div class="metrics-grid">
+    <div class="card total"><span>Total Cases</span><h3 id="totalCases">0</h3></div>
+    <div class="card issued"><span>Certificate Issued</span><h3 id="issuedCases">0</h3></div>
+    <div class="card pending"><span>Pending ⏳</span><h3 id="pendingCases">0</h3></div>
+  </div>
+
+  <!-- Table & Filters Section -->
+  <div class="main-section">
+    <div class="controls">
+      <input type="text" id="searchInput" oninput="filterData()" placeholder="🔍 Search Vehicle, IMEI...">
+      <select id="statusFilter" onchange="filterData()">
+        <option value="ALL">All Status / Remarks</option>
+        <option value="ISSUED">Issued</option>
+        <option value="PENDING">Pending</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Vehicle No</th>
+          <th>Status</th>
+          <th>State</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="5" style="text-align: center;">Data load ho raha hai...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Dynamic Detail Modal -->
+  <div class="modal" id="detailsModal">
+    <div class="modal-content">
       <div class="modal-header">
-        <h3 id="modalVehicleTitle"><i class="fa-solid fa-truck"></i> Vehicle Details</h3>
-        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <h3 id="modalTitle">Vehicle Details</h3>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
       </div>
-      <div class="modal-body">
-        <div class="detail-grid" id="modalDetailContent"></div>
-      </div>
+      <div class="detail-grid" id="modalBody"></div>
     </div>
   </div>
 
   <script>
-    // ⚠️ APNA GOOGLE APPS SCRIPT URL HERE PASTE KAREIN
-    const API_URL = "https://script.google.com/macros/s/AKfycbwtv9T1sNXReWmfiKsLtAX-9qyk1jKcF-QYrX1Y8DlJNy8g3-ckKioFb0mqPi4o3Swn/exec";
+    // ⚠️ YAHAN APNA APPS SCRIPT WEB APP URL PASTE KAREIN
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkRmL6i-nj9IVCuYWHVDXC71w29wuE2bMknID-JfDyFqohA3-TQcXMUpBQsSAkQah0Cw/exec"; 
+    
+    let fullData = [];
 
-    let rawData = [];
-    let currentFilteredData = [];
+    async function fetchData() {
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const rawData = await response.json();
+        
+        // Row 1 (Header Titles) Ko Skip Karke Real Data Parse Karna
+        const rows = rawData.slice(1);
+        
+        fullData = rows.map((cols, index) => ({
+          id: index + 1,
+          date: cols[0] || 'N/A',
+          portal: cols[1] || 'N/A',
+          status: cols[2] ? cols[2].toString().trim() : 'PENDING',
+          imei: cols[3] || 'N/A',
+          vltd: cols[4] || 'N/A',
+          iccid: cols[5] || 'N/A',
+          rto: cols[8] || 'N/A',
+          state: cols[9] || 'N/A',
+          vehicleNo: cols[17] || 'N/A',
+          holder: cols[20] || 'N/A',
+          phone: cols[21] || 'N/A'
+        }));
 
-    function loadDataWithJSONP() {
-      const script = document.createElement('script');
-      script.src = API_URL + "?callback=handleDataResponse";
-      script.onerror = function() {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script Load Failed! Web App URL check karein.</span>";
-      };
-      document.body.appendChild(script);
-    }
-
-    function handleDataResponse(data) {
-      if (!data || data.length === 0 || data.error) {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Sheet me data nahi mila!</span>";
-        return;
+        updateMetrics(fullData);
+        renderTable(fullData);
+      } catch (err) {
+        console.error(err);
+        document.getElementById("tableBody").innerHTML = `
+          <tr>
+            <td colspan="5" style="color:#ef4444; text-align:center; padding: 20px;">
+              Script Load Failed! Web App URL aur Deployment Access Settings check karein.
+            </td>
+          </tr>`;
       }
-
-      rawData = data;
-      currentFilteredData = rawData;
-
-      populateRemarkFilter(rawData);
-      calculateMetrics(rawData);
-      renderTable(rawData);
-
-      document.getElementById('loader').style.display = 'none';
-      document.getElementById('tableWrapper').style.display = 'block';
     }
 
-    function getVal(row, possibleNames) {
-      if (!row) return '';
-      const keys = Object.keys(row);
-      
-      for (let name of possibleNames) {
-        let matchedKey = keys.find(k => k.toLowerCase().trim() === name.toLowerCase().trim());
-        if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
-          return row[matchedKey];
-        }
-      }
-
-      for (let name of possibleNames) {
-        let matchedKey = keys.find(k => k.toLowerCase().includes(name.toLowerCase()));
-        if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
-          return row[matchedKey];
-        }
-      }
-      return '';
-    }
-
-    function populateRemarkFilter(data) {
-      const dropdown = document.getElementById('remarkFilter');
-      let optionsHTML = `
-        <option value="ALL">All Status / Remarks</option>
-        <option value="ISSUED">Certificate Issued</option>
-        <option value="PENDING">Total Pending</option>
-        <option value="NEED_ACTION">Need Action</option>
-        <option disabled>────────── Sheet Remarks ──────────</option>
-      `;
-
-      const uniqueRemarks = new Set();
-      data.forEach(row => {
-        let remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']);
-        if (remark && remark.toString().trim() !== '') {
-          uniqueRemarks.add(remark.toString().trim());
-        }
-      });
-
-      Array.from(uniqueRemarks).sort().forEach(rem => {
-        optionsHTML += `<option value="EXACT:rem">{rem}</option>`;
-      });
-
-      dropdown.innerHTML = optionsHTML;
-    }
-
-    function getVehicleNumber(row) {
-      let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Registration No', 'Vehicle Number', 'Vehicle No', 'Veh No', 'Reg No']);
-      if (veh && !veh.toUpperCase().startsWith('TRAX') && !veh.toUpperCase().startsWith('IMEI') && veh.length < 15) {
-        return veh;
-      }
-      const keys = Object.keys(row);
-      for (let k of keys) {
-        let val = (row[k] || '').toString().trim();
-        if (val.match(/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$/i)) return val;
-      }
-      return veh || 'N/A';
-    }
-
-    function isNeedActionStatus(remark) {
-      let rem = remark.toString().toLowerCase();
-      return rem.includes('activation pending') || rem.includes('check not clear') || rem.includes('topup pending') || rem.includes('top up pending');
-    }
-
-    function calculateMetrics(data) {
-      let total = data.length, issued = 0, pending = 0, needAction = 0;
-      data.forEach(row => {
-        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
-        let remLower = remark.toLowerCase();
-        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
-          issued++;
-        } else {
-          pending++;
-        }
-        if (isNeedActionStatus(remark)) needAction++;
-      });
-
-      document.getElementById('totalCases').innerText = total;
-      document.getElementById('issuedCount').innerText = issued;
-      document.getElementById('pendingCount').innerText = pending;
-      document.getElementById('actionableCount').innerText = needAction;
+    function updateMetrics(data) {
+      document.getElementById("totalCases").innerText = data.length;
+      const issued = data.filter(d => d.status.toUpperCase().includes("ISSUED")).length;
+      document.getElementById("issuedCases").innerText = issued;
+      document.getElementById("pendingCases").innerText = data.length - issued;
     }
 
     function renderTable(data) {
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = '';
-
-      if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No matching records found.</td></tr>`;
+      const tbody = document.getElementById("tableBody");
+      if(data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 15px;">Koi matching record nahi mila.</td></tr>`;
         return;
       }
-
-      data.forEach((row, index) => {
-        const vehicleNo = getVehicleNumber(row);
-        const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Party Name']) || '-';
-
-        let remarkBadge = `<span class="badge badge-warning">⚡ ${remark}</span>`;
-        let remLower = remark.toString().toLowerCase();
-
-        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
-          remarkBadge = `<span class="badge badge-issued"><i class="fa-solid fa-check"></i> ${remark}</span>`;
-        } else if (remLower.includes('deboarded') || remLower.includes('failed')) {
-          remarkBadge = `<span class="badge badge-pending"><i class="fa-solid fa-xmark"></i> ${remark}</span>`;
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${index + 1}</strong></td>
-          <td>
-            <button class="btn-vehicle" onclick="openVehicleDetail(${index})">
-              <i class="fa-solid fa-bus"></i> ${vehicleNo}
-            </button>
-          </td>
-          <td>${remarkBadge}</td>
-          <td><strong>${owner}</strong></td>
-          <td>
-            <button class="btn-view" onclick="openVehicleDetail(${index})">
-              <i class="fa-regular fa-eye"></i> View All
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
+      tbody.innerHTML = data.map((item, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td><b>${item.vehicleNo}</b></td>
+          <td><span style="color: ${item.status.toUpperCase().includes('ISSUED') ? '#10b981' : '#ef4444'}; font-weight:bold;">${item.status}</span></td>
+          <td>${item.state}</td>
+          <td><button class="btn-view" onclick="showDetails(${item.id - 1})">View Details</button></td>
+        </tr>
+      `).join('');
     }
 
-    function filterByCard(filterType) {
-      const dropdown = document.getElementById('remarkFilter');
-      if (dropdown) {
-        dropdown.value = filterType;
-        applyFilters();
-      }
-    }
+    function filterData() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const status = document.getElementById("statusFilter").value.toUpperCase();
 
-    function applyFilters() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const statusFilter = document.getElementById('remarkFilter').value;
-
-      currentFilteredData = rawData.filter(row => {
-        const matchesSearch = Object.values(row).some(v => 
-          v !== null && v !== undefined && v.toString().toLowerCase().includes(query)
-        );
-        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
-        let remLower = remark.toLowerCase();
-        let matchesStatus = true;
-
-        if (statusFilter === 'ISSUED') {
-          matchesStatus = remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed');
-        } else if (statusFilter === 'PENDING') {
-          matchesStatus = !remLower.includes('issued') && !remLower.includes('done') && !remLower.includes('completed');
-        } else if (statusFilter === 'NEED_ACTION') {
-          matchesStatus = isNeedActionStatus(remark);
-        } else if (statusFilter.startsWith('EXACT:')) {
-          let exactVal = statusFilter.replace('EXACT:', '');
-          matchesStatus = (remark.trim() === exactVal);
-        }
-
+      const filtered = fullData.filter(item => {
+        const matchesSearch = item.vehicleNo.toLowerCase().includes(search) || item.imei.toLowerCase().includes(search);
+        const matchesStatus = status === 'ALL' || item.status.toUpperCase().includes(status);
         return matchesSearch && matchesStatus;
       });
 
-      renderTable(currentFilteredData);
+      renderTable(filtered);
     }
 
-    function openVehicleDetail(index) {
-      const rowData = currentFilteredData[index];
-      const vehicleNo = getVehicleNumber(rowData);
+    function showDetails(index) {
+      const item = fullData[index];
+      document.getElementById("modalTitle").innerText = `🚚 ${item.vehicleNo}`;
+      
+      const modalContent = `
+        <div class="detail-card"><span class="detail-key">DATE</span><div class="detail-val">${item.date}</div></div>
+        <div class="detail-card"><span class="detail-key">PORTAL</span><div class="detail-val">${item.portal}</div></div>
+        <div class="detail-card"><span class="detail-key">IMEI</span><div class="detail-val">${item.imei}</div></div>
+        <div class="detail-card"><span class="detail-key">VLTD SERIAL</span><div class="detail-val">${item.vltd}</div></div>
+        <div class="detail-card"><span class="detail-key">ICCID</span><div class="detail-val">${item.iccid}</div></div>
+        <div class="detail-card"><span class="detail-key">STATE</span><div class="detail-val">${item.state}</div></div>
+        <div class="detail-card"><span class="detail-key">PERMIT HOLDER</span><div class="detail-val">${item.holder}</div></div>
+        <div class="detail-card"><span class="detail-key">CONTACT NO.</span><div class="detail-val">${item.phone}</div></div>
+      `;
 
-      document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> ${vehicleNo}`;
-      const modalContent = document.getElementById('modalDetailContent');
-      modalContent.innerHTML = '';
-
-      Object.keys(rowData).forEach(key => {
-        let val = rowData[key];
-        if (val === undefined || val === '') val = '-';
-        if (typeof val === 'string' && val.includes('T') && val.includes('Z')) val = val.split('T')[0];
-
-        const item = document.createElement('div');
-        item.className = 'detail-item';
-        item.innerHTML = `<div class="detail-label">key</div><divclass="detail-value">{val}</div>`;
-        modalContent.appendChild(item);
-      });
-
-      document.getElementById('detailModal').style.display = 'flex';
+      document.getElementById("modalBody").innerHTML = modalContent;
+      document.getElementById("detailsModal").style.display = "flex";
     }
 
-    function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
-
-    function exportDataToCSV() {
-      if (!currentFilteredData || currentFilteredData.length === 0) return alert("Export ke liye koi data nahi hai!");
-      let csv = '';
-      const headers = Object.keys(currentFilteredData[0]);
-      csv += headers.join(',') + '\n';
-      currentFilteredData.forEach(row => {
-        csv += headers.map(h => `"${(row[h]||'').toString().replace(/"/g, '""')}"`).join(',') + '\n';
-      });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = window.URL.createObjectURL(blob);
-      a.download = `Vehicle_Data_${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
+    function closeModal() {
+      document.getElementById("detailsModal").style.display = "none";
     }
 
-    window.onclick = function(event) {
-      const modal = document.getElementById('detailModal');
-      if (event.target === modal) closeModal();
-    };
-
-    loadDataWithJSONP();
+    // Auto load data on open
+    fetchData();
   </script>
 </body>
 </html>
-
-
