@@ -669,27 +669,28 @@
     }
 
     function openVehicleDetail(index) {
-      const rowData = currentFilteredData[index];
-      const vehicleNo = getVehicleNumber(rowData);
+      function openVehicleDetail(index) {
+  const rowData = currentFilteredData[index];
+  const vehicleNo = getVehicleNumber(rowData);
 
-      document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> ${vehicleNo}`;
-      const modalContent = document.getElementById('modalDetailContent');
-      modalContent.innerHTML = '';
+  document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> ${vehicleNo}`;
+  const modalContent = document.getElementById('modalDetailContent');
+  modalContent.innerHTML = '';
 
-      Object.keys(rowData).forEach(key => {
-        let val = rowData[key];
-        if (val === undefined || val === '') val = '-';
-        if (typeof val === 'string' && val.includes('T') && val.includes('Z')) val = val.split('T')[0];
+  Object.keys(rowData).forEach(key => {
+    let val = rowData[key];
+    if (val === undefined || val === '' || val === null) val = '-';
+    if (typeof val === 'string' && val.includes('T') && val.includes('Z')) val = val.split('T')[0];
 
-        const item = document.createElement('div');
-        item.className = 'detail-item';
-        item.innerHTML = `<div class="detail-label">key</div><divclass="detail-value">{val}</div>`;
-        modalContent.appendChild(item);
-      });
+    const item = document.createElement('div');
+    item.className = 'detail-item';
+    // Backticks `` ke sath ${key} aur ${val} sahi tarike se likha gaya hai:
+    item.innerHTML = `<div class="detail-label">${key}</div><div class="detail-value">${val}</div>`;
+    modalContent.appendChild(item);
+  });
 
-      document.getElementById('detailModal').style.display = 'flex';
-    }
-
+  document.getElementById('detailModal').style.display = 'flex';
+}
     function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
 
     function exportDataToCSV() {
