@@ -1015,6 +1015,49 @@
       document.getElementById('actionableCount').innerText = needAction;
     }
 
+    function applyFilters() {
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+      const stateVal = document.getElementById('stateFilter').value;
+      const remarkVal = document.getElementById('remarkFilter').value;
+
+      currentFilteredData = rawData.filter(row => {
+        // Search Filter
+        const veh = getVehicleNumber(row).toString().toLowerCase();
+        const state = getStateVal(row).toString().toLowerCase();
+        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Client Name', 'Customer', 'Name']).toString().toLowerCase();
+        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString().toLowerCase();
+
+        const matchesSearch = !searchVal || veh.includes(searchVal) || state.includes(searchVal) || owner.includes(searchVal) || remark.includes(searchVal);
+
+        // State Filter
+        const matchesState = (stateVal === 'ALL') || (getStateVal(row) === stateVal);
+
+        // Remark Filter
+        let matchesRemark = true;
+        if (remarkVal === 'ISSUED') {
+          matchesRemark = remark.includes('issued') || remark.includes('done') || remark.includes('completed');
+        } else if (remarkVal === 'PENDING') {
+          matchesRemark = !(remark.includes('issued') || remark.includes('done') || remark.includes('completed'));
+        } else if (remarkVal === 'NEED_ACTION') {
+          matchesRemark = isNeedActionStatus(remark);
+        } else if (remarkVal.startsWith('EXACT:')) {
+          const target = remarkVal.replace('EXACT:', '').toLowerCase();
+          matchesRemark = remark === target;
+        }
+
+        return matchesSearch && matchesState && matchesRemark;
+      });
+
+      calculateMetrics(currentFilteredData);
+      renderTable(currentFilteredData);
+    }
+
+    function filterByCard(type) {
+      const remarkDropdown = document.getElementById('remarkFilter');
+      remarkDropdown.value = type;
+      applyFilters();
+    }
+
     function renderTable(data) {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
@@ -1047,12 +1090,12 @@
               <i class="fa-solid fa-bus"></i> ${vehicleNo}
             </button>
           </td>
-          <td><span style="font-weight: 700; color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="font-size:11px; margin-right:4px;"></i>${stateName}</span></td>
+          <td><span style="font-weight: 700; color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="font-size:12px; margin-right:4px;"></i>${stateName}</span></td>
           <td>${remarkBadge}</td>
           <td><strong>${owner}</strong></td>
           <td>
             <button class="btn-view" onclick="openVehicleDetail(${index})">
-              <i class="fa-regular fa-eye"></i> View All
+              <i class="fa-solid fa-eye"></i> View
             </button>
           </td>
         `;
@@ -1060,90 +1103,58 @@
       });
     }
 
-    function filterByCard(filterType) {
-      const dropdown = document.getElementById('remarkFilter');
-      if (dropdown) {
-        dropdown.value = filterType;
-        applyFilters();
-      }
-    }
-
-    // Combined Multi-Filter Function (State + Remark + Search)
-    function applyFilters() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const statusFilter = document.getElementById('remarkFilter').value;
-      const stateFilter = document.getElementById('stateFilter').value;
-
-      currentFilteredData = rawData.filter(row => {
-        const matchesSearch = Object.values(row).some(v => v !== null && v !== undefined && v.toString().toLowerCase().includes(query));
-        const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
-        const rowState = getStateVal(row).toString();
-        
-        let remLower = remark.toLowerCase();
-        let matchesStatus = true;
-        let matchesState = true;
-
-        // State Filter Logic
-        if (stateFilter !== 'ALL') {
-          matchesState = (rowState.trim() === stateFilter.trim());
-        }
-
-        // Remarks Status Filter Logic
-        if (statusFilter === 'ISSUED') matchesStatus = remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed');
-        else if (statusFilter === 'PENDING') matchesStatus = !remLower.includes('issued') && !remLower.includes('done') && !remLower.includes('completed');
-        else if (statusFilter === 'NEED_ACTION') matchesStatus = isNeedActionStatus(remark);
-        else if (statusFilter.startsWith('EXACT:')) matchesStatus = (remark.trim() === statusFilter.replace('EXACT:', ''));
-
-        return matchesSearch && matchesStatus && matchesState;
-      });
-
-      calculateMetrics(currentFilteredData);
-      renderTable(currentFilteredData);
-    }
-
     function openVehicleDetail(index) {
-      const rowData = currentFilteredData[index];
-      const vehicleNo = getVehicleNumber(rowData);
+      const item = currentFilteredData[index];
+      if (!item) return;
 
-      document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> ${vehicleNo}`;
-      const modalContent = document.getElementById('modalDetailContent');
-      modalContent.innerHTML = '';
+      const title = getVehicleNumber(item);
+      document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> Vehicle: ${title}`;
 
-      Object.keys(rowData).forEach(key => {
-        let val = rowData[key];
-        if (val === undefined || val === '') val = '-';
-        if (typeof val === 'string' && val.includes('T') && val.includes('Z')) val = val.split('T')[0];
-
-        const item = document.createElement('div');
-        item.className = 'detail-item';
-        item.innerHTML = `<div class="detail-label">${key}</div><div class="detail-value">${val}</div>`;
-        modalContent.appendChild(item);
+      let detailsHTML = '';
+      Object.keys(item).forEach(key => {
+        if (item[key] !== undefined && item[key] !== null && item[key] !== '') {
+          detailsHTML += `
+            <div class="detail-item">
+              <div class="detail-label">${key}</div>
+              <div class="detail-value">${item[key]}</div>
+            </div>
+          `;
+        }
       });
 
+      document.getElementById('modalDetailContent').innerHTML = detailsHTML;
       document.getElementById('detailModal').style.display = 'flex';
     }
 
-    function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
-
-    function exportDataToCSV() {
-      if (!currentFilteredData || currentFilteredData.length === 0) return alert("Export ke liye koi data nahi hai!");
-      let csv = '';
-      const headers = Object.keys(currentFilteredData[0]);
-      csv += headers.join(',') + '\n';
-      currentFilteredData.forEach(row => {
-        csv += headers.map(h => `"${(row[h]||'').toString().replace(/"/g, '""')}"`).join(',') + '\n';
-      });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = window.URL.createObjectURL(blob);
-      a.download = `Vehicle_Data_${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
+    function closeModal() {
+      document.getElementById('detailModal').style.display = 'none';
     }
 
-    window.onclick = function(event) {
-      const modal = document.getElementById('detailModal');
-      if (event.target === modal) closeModal();
-    };
+    function exportDataToCSV() {
+      if (currentFilteredData.length === 0) {
+        alert("No data available to export!");
+        return;
+      }
+
+      const headers = Object.keys(currentFilteredData[0]);
+      let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+
+      currentFilteredData.forEach(row => {
+        let rowValues = headers.map(header => {
+          let val = row[header] ? row[header].toString().replace(/"/g, '""') : "";
+          return `"${val}"`;
+        });
+        csvContent += rowValues.join(",") + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `PAA_Vehicle_Data_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   </script>
 </body>
 </html>
