@@ -103,6 +103,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .header-badge { 
@@ -118,6 +119,13 @@
     }
     .header-badge .dot {
       width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;
+    }
+
+    /* Live Time & Date Badge Styling */
+    .time-badge {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
     }
 
     /* KPI Metric Cards Grid */
@@ -250,11 +258,17 @@
       -webkit-overflow-scrolling: touch;
     }
     
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 520px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 580px; }
     
     thead tr { background-color: #f8fafc; }
     th { padding: 14px 16px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
     td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+
+    .vehicle-cell-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     .btn-vehicle {
       background: #eff6ff; 
@@ -268,6 +282,27 @@
       align-items: center;
       gap: 6px;
       cursor: pointer;
+    }
+
+    /* Copy Button Styling */
+    .btn-copy {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .btn-copy.copied {
+      background: #10b981;
+      color: #ffffff;
+      border-color: #10b981;
     }
 
     .btn-view {
@@ -370,18 +405,20 @@
     <!-- Custom Header Section -->
     <div class="dashboard-header">
       <div class="header-left">
-        <!-- 🖼️ Aapki Profile / Logo Image -->
+        <!-- Profile / Logo Image -->
         <img src="truck" alt="Profile" class="user-avatar" id="userAvatar">
         
         <div class="header-title-box">
-          <!-- ✏️ Change Your Name / Title Here -->
           <h1>🚛 PAA Dashboard</h1>
-          <!-- ✏️ Change Subtitle / Description Lines Here -->
           <p>Managed by <strong>MRATYUNJAY</strong> • Real-time hi milega ⚡</p>
         </div>
       </div>
 
       <div class="header-right">
+        <!-- Live Realtime Clock & Date -->
+        <div class="header-badge time-badge">
+          <i class="fa-regular fa-clock"></i> <span id="realtimeClock">Loading Time...</span>
+        </div>
         <div class="header-badge">
           <span class="dot"></span> Live Sheet Sync
         </div>
@@ -479,6 +516,27 @@
 
     let rawData = [];
     let currentFilteredData = [];
+
+    // Real-Time Clock Function
+    function startRealtimeClock() {
+      function updateClock() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        });
+        const timeStr = now.toLocaleTimeString('en-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        });
+        document.getElementById('realtimeClock').innerText = `${dateStr} | ${timeStr}`;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
 
     function loadDataWithJSONP() {
       const script = document.createElement('script');
@@ -588,6 +646,22 @@
       document.getElementById('actionableCount').innerText = needAction;
     }
 
+    // Copy Vehicle Number Function
+    function copyVehicleNumber(btn, text) {
+      if (!text || text === 'N/A') return;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.classList.add('copied');
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = originalText;
+        }, 1500);
+      }).catch(err => {
+        console.error('Copy failed', err);
+      });
+    }
+
     function renderTable(data) {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
@@ -615,9 +689,14 @@
         tr.innerHTML = `
           <td><strong>${index + 1}</strong></td>
           <td>
-            <button class="btn-vehicle" onclick="openVehicleDetail(${index})">
-              <i class="fa-solid fa-bus"></i> ${vehicleNo}
-            </button>
+            <div class="vehicle-cell-container">
+              <button class="btn-vehicle" onclick="openVehicleDetail(${index})">
+                <i class="fa-solid fa-bus"></i> ${vehicleNo}
+              </button>
+              <button class="btn-copy" title="Copy Vehicle Number" onclick="copyVehicleNumber(this, '${vehicleNo}')">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
           </td>
           <td>${remarkBadge}</td>
           <td><strong>${owner}</strong></td>
@@ -712,6 +791,8 @@
       if (event.target === modal) closeModal();
     };
 
+    // Initialize Functions
+    startRealtimeClock();
     loadDataWithJSONP();
   </script>
 </body>
