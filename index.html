@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PAA LIVE DASHBOARD</title>
+  <title>live Vehicle Onboarding Dashboard</title>
   
   <!-- Google Fonts & FontAwesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
       --danger-bg: #fef2f2;
       
       --warning: #f59e0b;
-      --warning-bg: #fffbeb;
+      --warning-bg: #fffbebf;
       
       --border-color: #e2e8f0;
       --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
@@ -38,6 +38,7 @@
     
     body { 
       background-color: var(--bg-color); 
+      /* Subtle Background Texture/Pattern */
       background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
       background-size: 16px 16px;
       color: var(--text-main); 
@@ -50,12 +51,13 @@
       margin: 0 auto;
     }
 
-    /* Executive Header */
+    /* Personalized Executive Header */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      /* Background Theme Gradient */
       background: linear-gradient(135deg, #0b132b 0%, #1c2541 60%, #3a506b 100%);
       padding: 20px 24px;
       border-radius: 18px;
@@ -71,7 +73,7 @@
       gap: 16px;
     }
 
-    /* Truck Logo Styling */
+    /* Profile / Logo Image Styling */
     .user-avatar {
       width: 52px;
       height: 52px;
@@ -79,7 +81,6 @@
       border: 2px solid #38bdf8;
       object-fit: cover;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      background: #ffffff;
     }
 
     .header-title-box h1 { 
@@ -189,13 +190,7 @@
       gap: 12px; 
       margin-bottom: 18px; 
     }
-    
-    .filter-group { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 12px; 
-      width: 100%; 
-    }
+    .filter-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 
     .search-wrapper { position: relative; width: 100%; }
     .search-wrapper i { 
@@ -229,6 +224,22 @@
       background: #f8fafc; 
       color: var(--text-main); 
       font-weight: 600; 
+    }
+
+    .btn-export { 
+      width: 100%;
+      justify-content: center;
+      background: var(--text-main); 
+      color: #ffffff; 
+      border: none; 
+      padding: 12px; 
+      border-radius: 10px; 
+      font-size: 13px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
     }
 
     /* Table Mobile Responsive Scroll */
@@ -344,9 +355,10 @@
     @media (min-width: 768px) {
       body { padding: 32px 24px; }
       .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-      .filter-bar { flex-direction: row; justify-content: space-between; align-items: center; }
-      .filter-group { flex-direction: row; width: 100%; }
-      .search-wrapper { width: 320px; }
+      .filter-bar { flex-direction: row; justify-content: space-between; }
+      .filter-group { flex-direction: row; width: auto; }
+      .search-wrapper { width: 300px; }
+      .btn-export { width: auto; }
       .detail-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     }
   </style>
@@ -358,12 +370,13 @@
     <!-- Custom Header Section -->
     <div class="dashboard-header">
       <div class="header-left">
-        <!-- 🚚 Truck Logo Image -->
-        <img src="https://img.freepik.com/free-vector/delivery-truck-logistics-icon_24877-83561.jpg" alt="Truck Logo" class="user-avatar" id="userAvatar">
+        <!-- 🖼️ Aapki Profile / Logo Image -->
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Profile" class="user-avatar" id="userAvatar">
         
         <div class="header-title-box">
-          <!-- Updated Title -->
-          <h1>🚛 PAA LIVE DASHBOARD</h1>
+          <!-- ✏️ Change Your Name / Title Here -->
+          <h1>🚛 Mratyunjay world</h1>
+          <!-- ✏️ Change Subtitle / Description Lines Here -->
           <p>Managed by <strong>MRATYUNJAY</strong> • Real-time Sync ⚡</p>
         </div>
       </div>
@@ -375,11 +388,11 @@
       </div>
     </div>
 
-    <!-- KPI Metric Cards Grid -->
+    <!-- KPI Metric Cards Grid with Emojis -->
     <div class="metrics-grid">
       <div class="metric-card" onclick="filterByCard('ALL')">
         <div class="metric-info">
-          <p>Total Cases 📁</p>
+          <p>Total Cases </p>
           <h2 id="totalCases">0</h2>
         </div>
         <div class="metric-icon icon-total"><i class="fa-solid fa-folder-closed"></i></div>
@@ -387,7 +400,7 @@
 
       <div class="metric-card" onclick="filterByCard('ISSUED')">
         <div class="metric-info">
-          <p>Certificate Issued</p>
+          <p>Certificate Issued </p>
           <h2 id="issuedCount" style="color: var(--success);">0</h2>
         </div>
         <div class="metric-icon icon-issued"><i class="fa-solid fa-circle-check"></i></div>
@@ -410,29 +423,22 @@
       </div>
     </div>
 
-    <!-- Main Data Table Container Card -->
+    <!-- Main Data Table Container -->
     <div class="main-card">
       <div class="filter-bar">
         <div class="filter-group">
-          <!-- 📍 State Selection Option (Left Column) -->
-          <select id="stateFilter" class="select-filter" style="max-width: 220px;" onchange="applyFilters()">
-            <option value="ALL">All States 🗺️</option>
-          </select>
-
-          <!-- Status / Remark Dropdown Filter -->
-          <select id="remarkFilter" class="select-filter" style="max-width: 240px;" onchange="applyFilters()">
+          <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="applyFilters()">
+          </div>
+          <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
             <option value="ALL">All Status / Remarks</option>
             <option value="ISSUED">Certificate Issued</option>
             <option value="PENDING">Total Pending</option>
             <option value="NEED_ACTION">Need Action</option>
           </select>
-
-          <!-- 🔍 Search Bar (Moved to the Right) -->
-          <div class="search-wrapper">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, Owner, State..." onkeyup="applyFilters()">
-          </div>
         </div>
+        <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
       </div>
 
       <div id="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Dashboard Data...</div>
@@ -468,6 +474,7 @@
   </div>
 
   <script>
+    // ⚠️ APNA GOOGLE APPS SCRIPT URL HERE PASTE KAREIN
     const API_URL = "https://script.google.com/macros/s/AKfycbyHslvgv_ZLu_tkuxi6Pi3jBxbiCnzTlYSBy6YVoVIg53JBPDqzFXcvtbyjrlAnWiE/exec";
 
     let rawData = [];
@@ -491,7 +498,6 @@
       rawData = data;
       currentFilteredData = rawData;
 
-      populateStateFilter(rawData);
       populateRemarkFilter(rawData);
       calculateMetrics(rawData);
       renderTable(rawData);
@@ -500,7 +506,6 @@
       document.getElementById('tableWrapper').style.display = 'block';
     }
 
-    // Flexible Value Fetcher for various column headers
     function getVal(row, possibleNames) {
       if (!row) return '';
       const keys = Object.keys(row);
@@ -519,26 +524,6 @@
         }
       }
       return '';
-    }
-
-    // Populate Dynamic State Dropdown Filter
-    function populateStateFilter(data) {
-      const dropdown = document.getElementById('stateFilter');
-      let optionsHTML = `<option value="ALL">All States 🗺️</option>`;
-
-      const uniqueStates = new Set();
-      data.forEach(row => {
-        let state = getVal(row, ['State', 'State Name', 'RTO State', 'Location State']);
-        if (state && state.toString().trim() !== '') {
-          uniqueStates.add(state.toString().trim());
-        }
-      });
-
-      Array.from(uniqueStates).sort().forEach(st => {
-        optionsHTML += `<option value="${st}">${st}</option>`;
-      });
-
-      dropdown.innerHTML = optionsHTML;
     }
 
     function populateRemarkFilter(data) {
@@ -560,7 +545,7 @@
       });
 
       Array.from(uniqueRemarks).sort().forEach(rem => {
-        optionsHTML += `<option value="EXACT:${rem}">${rem}</option>`;
+        optionsHTML += `<option value="EXACT:rem">{rem}</option>`;
       });
 
       dropdown.innerHTML = optionsHTML;
@@ -579,17 +564,11 @@
       return veh || 'N/A';
     }
 
-    // Explicit function to safely retrieve Owner Name
-    function getOwnerName(row) {
-      return getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Client Name', 'Customer', 'Party']) || 'N/A';
-    }
-
     function isNeedActionStatus(remark) {
       let rem = remark.toString().toLowerCase();
       return rem.includes('activation pending') || rem.includes('check not clear') || rem.includes('topup pending') || rem.includes('top up pending');
     }
 
-    // Calculate Dynamic Metrics based on current State & Status filtering
     function calculateMetrics(data) {
       let total = data.length, issued = 0, pending = 0, needAction = 0;
       data.forEach(row => {
@@ -621,7 +600,7 @@
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-        const owner = getOwnerName(row);
+        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Party Name']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning">⚡ ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
@@ -663,19 +642,11 @@
     function applyFilters() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const statusFilter = document.getElementById('remarkFilter').value;
-      const selectedState = document.getElementById('stateFilter').value;
 
       currentFilteredData = rawData.filter(row => {
-        // Search matching
         const matchesSearch = Object.values(row).some(v => 
           v !== null && v !== undefined && v.toString().toLowerCase().includes(query)
         );
-
-        // State matching
-        const rowState = (getVal(row, ['State', 'State Name', 'RTO State', 'Location State']) || '').toString().trim();
-        let matchesState = (selectedState === 'ALL') || (rowState === selectedState);
-
-        // Status matching
         const remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
         let remLower = remark.toLowerCase();
         let matchesStatus = true;
@@ -691,11 +662,9 @@
           matchesStatus = (remark.trim() === exactVal);
         }
 
-        return matchesSearch && matchesState && matchesStatus;
+        return matchesSearch && matchesStatus;
       });
 
-      // Recalculate KPI metrics and re-render table with filtered data
-      calculateMetrics(currentFilteredData);
       renderTable(currentFilteredData);
     }
 
@@ -714,7 +683,7 @@
 
         const item = document.createElement('div');
         item.className = 'detail-item';
-        item.innerHTML = `<div class="detail-label">${key}</div><div class="detail-value">${val}</div>`;
+        item.innerHTML = `<div class="detail-label">key</div><divclass="detail-value">{val}</div>`;
         modalContent.appendChild(item);
       });
 
@@ -722,6 +691,21 @@
     }
 
     function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
+
+    function exportDataToCSV() {
+      if (!currentFilteredData || currentFilteredData.length === 0) return alert("Export ke liye koi data nahi hai!");
+      let csv = '';
+      const headers = Object.keys(currentFilteredData[0]);
+      csv += headers.join(',') + '\n';
+      currentFilteredData.forEach(row => {
+        csv += headers.map(h => `"${(row[h]||'').toString().replace(/"/g, '""')}"`).join(',') + '\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = `Vehicle_Data_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
 
     window.onclick = function(event) {
       const modal = document.getElementById('detailModal');
@@ -732,3 +716,5 @@
   </script>
 </body>
 </html>
+
+
