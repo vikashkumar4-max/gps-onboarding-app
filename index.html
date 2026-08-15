@@ -5,105 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GPS Onboarding Dashboard</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f1f5f9; padding: 20px; color: #1e293b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0d1322; background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 20px 20px; padding: 24px; color: #f8fafc; min-height: 100vh; }
     
-    /* Header Container */
-    .header { background: #0f172a; color: white; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-    .header img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #0070f3; }
-    .header-info h2 { font-size: 20px; font-weight: 600; }
-    .header-info p { font-size: 13px; color: #94a3b8; margin-top: 3px; }
+    /* Top Header */
+    .header { background: linear-gradient(135deg, #111827 0%, #1e293b 100%); padding: 16px 24px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); margin-bottom: 24px; }
+    .profile-section { display: flex; align-items: center; gap: 14px; }
+    .avatar { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #3b82f6; object-fit: cover; }
+    .profile-info h2 { font-size: 18px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px; }
+    .profile-info p { font-size: 12px; color: #94a3b8; font-weight: 500; margin-top: 2px; }
+    .sync-badge { background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(59, 130, 246, 0.3); }
 
-    /* Metrics Cards */
-    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .card span { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
-    .card h3 { font-size: 28px; margin-top: 5px; }
-    .card.total h3 { color: #0f172a; }
+    /* Metrics Cards Grid */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border-radius: 16px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); }
+    .card-info span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
+    .card-info h3 { font-size: 32px; font-weight: 800; margin-top: 4px; line-height: 1; }
+    .card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    
+    .card.total h3 { color: #f8fafc; }
+    .card.total .card-icon { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
     .card.issued h3 { color: #10b981; }
+    .card.issued .card-icon { background: rgba(16, 185, 129, 0.15); color: #10b981; }
     .card.pending h3 { color: #ef4444; }
+    .card.pending .card-icon { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
-    /* Controls & Table */
-    .main-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .controls input, .controls select { padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
-    .controls input { flex: 1; min-width: 200px; }
+    /* Main Content Area */
+    .main-section { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+    .controls { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
-    th { background: #f8fafc; color: #64748b; font-weight: 600; }
-    .btn-view { background: #0070f3; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-    .btn-view:hover { background: #0051a8; }
+    .search-box { position: relative; flex: 1; min-width: 250px; }
+    .search-box input { width: 100%; background: #0b0f19; border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 16px 12px 40px; border-radius: 10px; color: #fff; font-size: 14px; outline: none; transition: 0.2s; }
+    .search-box input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b; }
 
-    /* Modal Styling */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); justify-content: center; align-items: center; }
-    .modal-content { background: white; width: 90%; max-width: 550px; border-radius: 12px; padding: 20px; position: relative; max-height: 85vh; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
-    .close-btn { font-size: 20px; cursor: pointer; color: #64748b; font-weight: bold; }
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .detail-card { background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
-    .detail-key { font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase; }
-    .detail-val { font-size: 13px; font-weight: 600; color: #0f172a; margin-top: 2px; }
+    .select-box select { background: #0b0f19; border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 10px; color: #fff; font-size: 14px; outline: none; cursor: pointer; }
+
+    /* Table */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { padding: 14px 16px; color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    td { padding: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 14px; color: #cbd5e1; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .badge-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
+    .badge-issued { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-pending { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    .btn-action { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-action:hover { background: #3b82f6; color: #fff; }
+
+    /* Glass Popup Modal */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: #111827; border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 520px; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
+    .modal-header { background: #1f2937; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .modal-header h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .close-btn { background: rgba(255,255,255,0.05); border: none; color: #94a3b8; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .close-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    
+    .modal-body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .detail-card { background: #0b0f19; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .detail-key { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+    .detail-val { font-size: 13px; font-weight: 600; color: #f1f5f9; margin-top: 4px; word-break: break-all; }
   </style>
 </head>
 <body>
 
   <!-- Header Section -->
   <div class="header">
-    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" alt="Avatar">
-    <div class="header-info">
-      <h2>🚛 Mratyunjay world</h2>
-      <p>Managed by MRATYUNJAY • Real-time Sync ⚡</p>
+    <div class="profile-section">
+      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200" class="avatar" alt="Avatar">
+      <div class="profile-info">
+        <h2>🚛 Mratyunjay world</h2>
+        <p>Managed by MRATYUNJAY</p>
+      </div>
+    </div>
+    <div class="sync-badge">Real-time Sync ⚡</div>
+  </div>
+
+  <!-- Top Stat Cards -->
+  <div class="metrics-grid">
+    <div class="card total">
+      <div class="card-info"><span>Total Cases</span><h3 id="totalCases">0</h3></div>
+      <div class="card-icon">📁</div>
+    </div>
+    <div class="card issued">
+      <div class="card-info"><span>Certificate Issued</span><h3 id="issuedCases">0</h3></div>
+      <div class="card-icon">✅</div>
+    </div>
+    <div class="card pending">
+      <div class="card-info"><span>Pending Cases</span><h3 id="pendingCases">0</h3></div>
+      <div class="card-icon">⏳</div>
     </div>
   </div>
 
-  <!-- Metrics Grid -->
-  <div class="metrics-grid">
-    <div class="card total"><span>Total Cases</span><h3 id="totalCases">0</h3></div>
-    <div class="card issued"><span>Certificate Issued</span><h3 id="issuedCases">0</h3></div>
-    <div class="card pending"><span>Pending ⏳</span><h3 id="pendingCases">0</h3></div>
-  </div>
-
-  <!-- Table & Filters Section -->
+  <!-- Search Table Section -->
   <div class="main-section">
     <div class="controls">
-      <input type="text" id="searchInput" oninput="filterData()" placeholder="🔍 Search Vehicle, IMEI...">
-      <select id="statusFilter" onchange="filterData()">
-        <option value="ALL">All Status / Remarks</option>
-        <option value="ISSUED">Issued</option>
-        <option value="PENDING">Pending</option>
-      </select>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" oninput="filterData()" placeholder="Search Vehicle, IMEI...">
+      </div>
+      <div class="select-box">
+        <select id="statusFilter" onchange="filterData()">
+          <option value="ALL">All Status / Remarks</option>
+          <option value="ISSUED">Issued</option>
+          <option value="PENDING">Pending</option>
+        </select>
+      </div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Vehicle No</th>
-          <th>Status</th>
-          <th>State</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <tr><td colspan="5" style="text-align: center;">Data load ho raha hai...</td></tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Vehicle No</th>
+            <th>Status</th>
+            <th>State</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="5" style="text-align:center; padding: 30px; color:#64748b;">Syncing data from Google Sheet...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- Dynamic Detail Modal -->
+  <!-- Detail Popup Modal -->
   <div class="modal" id="detailsModal">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modalTitle">Vehicle Details</h3>
-        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <button class="close-btn" onclick="closeModal()">✕</button>
       </div>
-      <div class="detail-grid" id="modalBody"></div>
+      <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
 
   <script>
-    // ⚠️ YAHAN APNA APPS SCRIPT WEB APP URL PASTE KAREIN
+    // ⚠️ Put your Apps Script Web App Deployment URL here:
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkRmL6i-nj9IVCuYWHVDXC71w29wuE2bMknID-JfDyFqohA3-TQcXMUpBQsSAkQah0Cw/exec"; 
     
     let fullData = [];
@@ -113,7 +155,6 @@
         const response = await fetch(SCRIPT_URL);
         const rawData = await response.json();
         
-        // Row 1 (Header Titles) Ko Skip Karke Real Data Parse Karna
         const rows = rawData.slice(1);
         
         fullData = rows.map((cols, index) => ({
@@ -134,13 +175,10 @@
         updateMetrics(fullData);
         renderTable(fullData);
       } catch (err) {
-        console.error(err);
         document.getElementById("tableBody").innerHTML = `
-          <tr>
-            <td colspan="5" style="color:#ef4444; text-align:center; padding: 20px;">
-              Script Load Failed! Web App URL aur Deployment Access Settings check karein.
-            </td>
-          </tr>`;
+          <tr><td colspan="5" style="color:#ef4444; text-align:center; padding:25px;">
+            Script Load Failed! Web App URL check karein.
+          </td></tr>`;
       }
     }
 
@@ -154,18 +192,21 @@
     function renderTable(data) {
       const tbody = document.getElementById("tableBody");
       if(data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 15px;">Koi matching record nahi mila.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color: #64748b;">No matching records found.</td></tr>`;
         return;
       }
-      tbody.innerHTML = data.map((item, idx) => `
-        <tr>
-          <td>${idx + 1}</td>
-          <td><b>${item.vehicleNo}</b></td>
-          <td><span style="color: ${item.status.toUpperCase().includes('ISSUED') ? '#10b981' : '#ef4444'}; font-weight:bold;">${item.status}</span></td>
-          <td>${item.state}</td>
-          <td><button class="btn-view" onclick="showDetails(${item.id - 1})">View Details</button></td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = data.map((item, idx) => {
+        const isIssued = item.status.toUpperCase().includes('ISSUED');
+        return `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><b style="color:#fff">${item.vehicleNo}</b></td>
+            <td><span class="badge-status ${isIssued ? 'badge-issued' : 'badge-pending'}">${item.status}</span></td>
+            <td>${item.state}</td>
+            <td><button class="btn-action" onclick="showDetails(${item.id - 1})">View Details</button></td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function filterData() {
@@ -183,7 +224,7 @@
 
     function showDetails(index) {
       const item = fullData[index];
-      document.getElementById("modalTitle").innerText = `🚚 ${item.vehicleNo}`;
+      document.getElementById("modalTitle").innerHTML = `🚚 <span>${item.vehicleNo}</span>`;
       
       const modalContent = `
         <div class="detail-card"><span class="detail-key">DATE</span><div class="detail-val">${item.date}</div></div>
@@ -204,7 +245,6 @@
       document.getElementById("detailsModal").style.display = "none";
     }
 
-    // Auto load data on open
     fetchData();
   </script>
 </body>
