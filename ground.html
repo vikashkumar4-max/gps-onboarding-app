@@ -1,4 +1,97 @@
-// ⚠️ यहाँ अपना Deploy किया हुआ Apps Script Web App URL पेस्ट करें
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ground Team Portal - Mratyunjay World</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4318ff;
+      --danger: #ee5d50;
+      --danger-bg: #fde8e8;
+      --border-color: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 20px 15px; }
+    .container { max-width: 600px; margin: 0 auto; }
+
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white; padding: 20px; border-radius: 16px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header h2 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    
+    .card {
+      background: var(--card-bg); padding: 20px; border-radius: 16px;
+      border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      width: 100%; padding: 14px 16px; border: 2px solid var(--primary);
+      border-radius: 12px; font-size: 16px; font-weight: 700; text-transform: uppercase;
+      outline: none; background: #ffffff;
+    }
+
+    .alert-no-info {
+      background: var(--danger-bg); border: 1px solid var(--danger); color: var(--danger);
+      padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; margin: 12px 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .badge-info {
+      background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; display: inline-block;
+    }
+
+    .form-group { margin-top: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+
+    select, textarea {
+      width: 100%; padding: 12px; border: 1px solid var(--border-color);
+      border-radius: 10px; font-size: 14px; font-weight: 600; outline: none; background: #f8fafc;
+    }
+
+    .btn-submit {
+      background: var(--primary); color: white; border: none; padding: 14px;
+      border-radius: 10px; font-weight: 800; font-size: 14px; width: 100%;
+      cursor: pointer; margin-top: 14px; transition: background 0.2s;
+    }
+    .btn-submit:hover { background: #3311cc; }
+
+    #loader { text-align: center; font-weight: 700; color: var(--primary); padding: 20px; }
+    #noDataMsg { text-align: center; color: var(--text-muted); font-weight: 600; padding: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2><i class="fa-solid fa-person-walking-luggage"></i> Ground Team Portal</h2>
+    <span style="font-size:11px; opacity:0.8;">Mratyunjay World</span>
+  </div>
+
+  <div class="card">
+    <input type="text" id="searchVehicle" class="search-box" placeholder="गाड़ी का नंबर डालें (e.g. AS01...)" onkeyup="searchVehicle()">
+  </div>
+
+  <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> Data Loading...</div>
+  <div id="noDataMsg" style="display:none;">गाड़ी नंबर सर्च करें...</div>
+
+  <div id="resultContainer"></div>
+</div>
+
+<script>
+  // Google Apps Script Web App URL
   const API_URL = "https://script.google.com/macros/s/AKfycbyNb329KNwYVoC-f0ceBIWg_oBFLGJlvE54kBFtEmCnJwcnrHsm6DMQ2aipIxI83i7W_g/exec";
 
   let vehicleData = [];
@@ -16,25 +109,20 @@
       });
   }
 
-  // 1. स्मार्ट क्लीनर: किसी भी फ़ॉर्मेट (स्पेस, डेश, डॉट्स) को हटाकर केवल प्योर टेक्स्ट/नंबर निकालता है
   function sanitize(str) {
     if (!str) return '';
     return str.toString().replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   }
 
-  // 2. ऑटो-डिटेक्ट गाड़ी नंबर (किसी भी कॉलम हेडर नाम से फ़ेच करने के लिए)
   function getVehicleNo(row) {
     if (!row) return '';
     const keys = Object.keys(row);
-    
-    // पहले सम्भावित कॉलम नाम चेक करें
     for (let k of keys) {
       let keyLower = k.toLowerCase();
       if (keyLower.includes('veh') || keyLower.includes('reg') || keyLower.includes('number') || keyLower.includes('no')) {
         if (row[k]) return row[k].toString();
       }
     }
-    // अगर हेडर मैच न हो तो पहला कॉलम उठाएं
     return row[keys[0]] ? row[keys[0]].toString() : '';
   }
 
@@ -50,7 +138,6 @@
     return 'NO INFO';
   }
 
-  // 3. AUTO-FETCH SEARCH FUNCTION
   function searchVehicle() {
     const rawQuery = document.getElementById('searchVehicle').value;
     const cleanQuery = sanitize(rawQuery);
@@ -58,14 +145,12 @@
     const noDataMsg = document.getElementById('noDataMsg');
     container.innerHTML = '';
 
-    // केवल 2 अक्षर टाइप करते ही सर्च शुरू हो जाएगा
     if (cleanQuery.length < 2) {
       noDataMsg.innerText = "गाड़ी नंबर सर्च करें...";
       noDataMsg.style.display = 'block';
       return;
     }
 
-    // किसी भी फ़ॉर्मेट में डेटा मौजूद हो, यह उसे स्मार्टली फ़िल्टर करेगा
     const filtered = vehicleData.filter(row => {
       let vehClean = sanitize(getVehicleNo(row));
       return vehClean.includes(cleanQuery);
@@ -146,3 +231,7 @@
   }
 
   loadData();
+</script>
+
+</body>
+</html>
