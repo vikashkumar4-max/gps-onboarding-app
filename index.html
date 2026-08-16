@@ -374,6 +374,7 @@
     .badge-issued { background-color: var(--success-bg); color: #047857; }
     .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
     .badge-warning { background-color: var(--warning-bg); color: #b45309; }
+    .badge-ground { background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
 
     /* Modal Detail Overlay */
     .modal-overlay {
@@ -549,8 +550,8 @@
   </div>
 
   <script>
-    // ⚠️ यहाँ अपना नया Google Apps Script Deploy किया हुआ Web App URL डालें
-    const API_URL = "https://script.google.com/macros/s/AKfycbyNb329KNwYVoC-f0ceBIWg_oBFLGJlvE54kBFtEmCnJwcnrHsm6DMQ2aipIxI83i7W_g/exec";
+    // ⚠️ Google Apps Script Deploy URL
+    const API_URL = "https://script.google.com/macros/s/AKfycbwabLTNhYCMUQXeYdG0R323jiszvFT8pskRzy08h7a4IWWkHoq69d493au4lsHdvN-Uog/exec";
 
     let rawData = [];
     let currentFilteredData = [];
@@ -597,18 +598,22 @@
       document.getElementById('syncTime').innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Last Synced: ${timeStr}`;
     }
 
+    // GROUND TEAM UPDATE AND SHEET REMARK INTEGRATION
     function getVal(row, possibleNames) {
       if (!row) return '';
       const keys = Object.keys(row);
       
-      for (let name of possibleNames) {
+      // Ground Status / Ground Team Updates priority matching
+      let priorityNames = ['Ground Status', 'Ground Remark', 'Ground Team Status', ...possibleNames];
+      
+      for (let name of priorityNames) {
         let matchedKey = keys.find(k => k.toLowerCase().trim() === name.toLowerCase().trim());
         if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
           return row[matchedKey];
         }
       }
 
-      for (let name of possibleNames) {
+      for (let name of priorityNames) {
         let matchedKey = keys.find(k => k.toLowerCase().includes(name.toLowerCase()));
         if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
           return row[matchedKey];
@@ -711,7 +716,9 @@
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
 
-        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
+        if (remLower.includes('now vehicle live') || remLower.includes('ground update')) {
+          remarkBadge = `<span class="badge badge-ground"><i class="fa-solid fa-person-walking-luggage"></i> ${remark}</span>`;
+        } else if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
           remarkBadge = `<span class="badge badge-issued"><i class="fa-solid fa-check"></i> ${remark}</span>`;
         } else if (remLower.includes('deboarded') || remLower.includes('failed')) {
           remarkBadge = `<span class="badge badge-pending"><i class="fa-solid fa-xmark"></i> ${remark}</span>`;
