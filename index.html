@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manu certification status </title>
+  <title>Manu certification status</title>
   <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -514,18 +514,29 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyhTK1DC-7lfteOykLHBsD8Irgx5cLE3OAMb4t1avM6XPN-fxwwgLQP4nfL8LzNcD5GOA/exec";
+    // ⚠️ यहाँ अपना नया Google Apps Script Deploy किया हुआ URL डालें
+    const API_URL = "https://script.google.com/macros/s/AKfycbwi1anWk3WqC9gaj7jT00TW8AnzElfQnTIQmZ28xpYt4gxxxh9rHLMpQ0nNgxa6tTQHlw/exec";
 
     let rawData = [];
     let currentFilteredData = [];
 
-    function loadDataWithJSONP() {
-      const script = document.createElement('script');
-      script.src = API_URL + "?callback=handleDataResponse";
-      script.onerror = function() {
-        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script load failed! Check Web App URL.</span>";
-      };
-      document.body.appendChild(script);
+    // Modern Fetch Request for CORS Block Fix
+    function loadData() {
+      fetch(API_URL, {
+        method: "GET",
+        redirect: "follow"
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("HTTP error " + response.status);
+        return response.json();
+      })
+      .then(data => {
+        handleDataResponse(data);
+      })
+      .catch(error => {
+        console.error("Fetch Error:", error);
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script load failed! Check Web App URL access permissions.</span>";
+      });
     }
 
     function handleDataResponse(data) {
@@ -540,7 +551,7 @@
       populateRemarkFilter(rawData);
       calculateMetrics(rawData);
       renderTable(rawData);
-      updateSyncTime(); // Update Timestamp on data fetch
+      updateSyncTime();
 
       document.getElementById('loader').style.display = 'none';
       document.getElementById('tableWrapper').style.display = 'block';
@@ -661,9 +672,7 @@
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-        
-      
-const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Transporter', 'Client']) || '-';
+        const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Transporter', 'Client']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
@@ -780,7 +789,8 @@ const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Na
       if (event.target === modal) closeModal();
     };
 
-    loadDataWithJSONP();
+    // Initialize Fetching
+    loadData();
   </script>
 </body>
 </html>
