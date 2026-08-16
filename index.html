@@ -662,8 +662,8 @@
         const vehicleNo = getVehicleNumber(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
         
-        // Extended keys to accurately capture Owner Name
-        const owner = getVal(row, ['Owner Name', 'Owner', 'OwnerName', 'Customer Name', 'Customer', 'Party Name', 'Party', 'Transporter', 'Client', 'Company']) || 'N/A';
+      
+const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Transporter', 'Client']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
