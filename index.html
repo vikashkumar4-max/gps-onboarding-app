@@ -550,7 +550,7 @@
   </div>
 
   <script>
-    // ⚠️ Google Apps Script Deploy URL
+    // Google Apps Script Deploy URL
     const API_URL = "https://script.google.com/macros/s/AKfycbySQxSICMUprJjCdK8-u9SPiO2m1mMHkSzO5J1mefdbfvMLh6M-Oe-EfReHKwb7Wo1-ww/exec";
 
     let rawData = [];
@@ -700,68 +700,12 @@
     }
 
     function renderTable(data) {
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = '';
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
 
-  if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:36px; color:var(--text-muted);">No matching vehicle records found.</td></tr>`;
-    return;
-  }
-
-  data.forEach((row, index) => {
-    const vehicleNo = getVehicleNumber(row);
-    const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-    const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Transporter', 'Client']) || '-';
-
-    let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
-    let remLower = remark.toString().toLowerCase().trim();
-
-    // 1. Ground Team Updates (3 New Specific Conditions + General Live)
-    if (remLower.includes('now vehicle live') || remLower.includes('now live')) {
-      remarkBadge = `<span class="badge badge-issued" style="background:#dcfce7; color:#15803d; border:1px solid #86efac;">
-        <i class="fa-solid fa-satellite-dish"></i> ${remark}
-      </span>`;
-    } else if (remLower.includes('now untag done') || remLower.includes('untag done')) {
-      remarkBadge = `<span class="badge badge-issued" style="background:#e0e7ff; color:#3730a3; border:1px solid #a5b4fc;">
-        <i class="fa-solid fa-link-slash"></i> ${remark}
-      </span>`;
-    } else if (remLower.includes('ground update')) {
-      remarkBadge = `<span class="badge badge-ground"><i class="fa-solid fa-person-walking-luggage"></i> ${remark}</span>`;
-    } 
-    // 2. Admin Conditions (Pending Action)
-    else if (remLower.includes('no info')) {
-      remarkBadge = `<span class="badge badge-pending" style="background:#fef2f2; color:#991b1b;"><i class="fa-solid fa-circle-question"></i> No Info</span>`;
-    } else if (remLower.includes('battery disconnected')) {
-      remarkBadge = `<span class="badge badge-pending" style="background:#fff7ed; color:#c2410c;"><i class="fa-solid fa-battery-empty"></i> Battery Disconnected</span>`;
-    } else if (remLower.includes('tagged with another company')) {
-      remarkBadge = `<span class="badge badge-warning" style="background:#fef3c7; color:#92400e;"><i class="fa-solid fa-building-flag"></i> Tagged Other Co.</span>`;
-    }
-    // 3. General Issued & Failed Statuses
-    else if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
-      remarkBadge = `<span class="badge badge-issued"><i class="fa-solid fa-check"></i> ${remark}</span>`;
-    } else if (remLower.includes('deboarded') || remLower.includes('failed')) {
-      remarkBadge = `<span class="badge badge-pending"><i class="fa-solid fa-xmark"></i> ${remark}</span>`;
-    }
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><strong>${index + 1}</strong></td>
-      <td>
-        <button class="btn-vehicle" onclick="openVehicleDetail(${index})">
-          <i class="fa-solid fa-truck-front"></i> ${vehicleNo}
-        </button>
-      </td>
-      <td>${remarkBadge}</td>
-      <td><strong>${owner}</strong></td>
-      <td>
-        <button class="btn-view" onclick="openVehicleDetail(${index})">
-          <i class="fa-solid fa-eye"></i> View All
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:36px; color:var(--text-muted);">No matching vehicle records found.</td></tr>`;
+        return;
       }
 
       data.forEach((row, index) => {
@@ -770,11 +714,30 @@
         const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Transporter', 'Client']) || '-';
 
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
-        let remLower = remark.toString().toLowerCase();
+        let remLower = remark.toString().toLowerCase().trim();
 
-        if (remLower.includes('now vehicle live') || remLower.includes('ground update')) {
+        // 1. Ground Team Updates
+        if (remLower.includes('now vehicle live') || remLower.includes('now live')) {
+          remarkBadge = `<span class="badge badge-issued" style="background:#dcfce7; color:#15803d; border:1px solid #86efac;">
+            <i class="fa-solid fa-satellite-dish"></i> ${remark}
+          </span>`;
+        } else if (remLower.includes('now untag done') || remLower.includes('untag done')) {
+          remarkBadge = `<span class="badge badge-issued" style="background:#e0e7ff; color:#3730a3; border:1px solid #a5b4fc;">
+            <i class="fa-solid fa-link-slash"></i> ${remark}
+          </span>`;
+        } else if (remLower.includes('ground update')) {
           remarkBadge = `<span class="badge badge-ground"><i class="fa-solid fa-person-walking-luggage"></i> ${remark}</span>`;
-        } else if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
+        } 
+        // 2. Admin Conditions (Pending Action)
+        else if (remLower.includes('no info')) {
+          remarkBadge = `<span class="badge badge-pending" style="background:#fef2f2; color:#991b1b;"><i class="fa-solid fa-circle-question"></i> No Info</span>`;
+        } else if (remLower.includes('battery disconnected')) {
+          remarkBadge = `<span class="badge badge-pending" style="background:#fff7ed; color:#c2410c;"><i class="fa-solid fa-battery-empty"></i> Battery Disconnected</span>`;
+        } else if (remLower.includes('tagged with another company')) {
+          remarkBadge = `<span class="badge badge-warning" style="background:#fef3c7; color:#92400e;"><i class="fa-solid fa-building-flag"></i> Tagged Other Co.</span>`;
+        }
+        // 3. General Issued & Failed Statuses
+        else if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
           remarkBadge = `<span class="badge badge-issued"><i class="fa-solid fa-check"></i> ${remark}</span>`;
         } else if (remLower.includes('deboarded') || remLower.includes('failed')) {
           remarkBadge = `<span class="badge badge-pending"><i class="fa-solid fa-xmark"></i> ${remark}</span>`;
