@@ -81,7 +81,7 @@
   </div>
 
   <div class="card">
-    <input type="text" id="searchVehicle" class="search-box" placeholder="गाड़ी का नंबर डालें (e.g. AS01...)" onkeyup="searchVehicle()">
+    <input type="text" id="searchVehicle" class="search-box" placeholder="गाड़ी का नंबर डालें (e.g. PB11...)" onkeyup="searchVehicle()">
   </div>
 
   <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> Data Loading...</div>
@@ -94,13 +94,13 @@
   // Google Apps Script Web App URL
   const API_URL = "https://script.google.com/macros/s/AKfycbyNb329KNwYVoC-f0ceBIWg_oBFLGJlvE54kBFtEmCnJwcnrHsm6DMQ2aipIxI83i7W_g/exec";
 
-  let vehicleData = [];
+  let rawData = [];
 
   function loadData() {
     fetch(API_URL, { method: "GET", redirect: "follow" })
       .then(res => res.json())
       .then(data => {
-        vehicleData = data;
+        rawData = data;
         document.getElementById('loader').style.display = 'none';
         document.getElementById('noDataMsg').style.display = 'block';
       })
@@ -109,51 +109,77 @@
       });
   }
 
+  // index.html का getVal() फ़ंक्शन (Exact Copy)
+  function getVal(row, possibleNames) {
+    if (!row) return '';
+    const keys = Object.keys(row);
+    
+    for (let name of possibleNames) {
+      let matchedKey = keys.find(k => k.toLowerCase().trim() === name.toLowerCase().trim());
+      if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
+        return row[matchedKey];
+      }
+    }
+
+    for (let name of possibleNames) {
+      let matchedKey = keys.find(k => k.toLowerCase().includes(name.toLowerCase()));
+      if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') {
+        return row[matchedKey];
+      }
+    }
+    return '';
+  }
+
+  // index.html का getVehicleNumber() फ़ंक्शन (Exact Copy)
+  function getVehicleNumber(row) {
+    let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Registration No', 'Vehicle Number', 'Vehicle No', 'Veh No', 'Reg No', 'Vehicle No.']);
+    
+    if (veh && !veh.toUpperCase().startsWith('TRAX') && !veh.toUpperCase().startsWith('IMEI') && veh.length < 15) {
+      return veh;
+    }
+
+    const keys = Object.keys(row);
+    for (let k of keys) {
+      let val = (row[k] || '').toString().trim();
+      if (val.match(/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$/i)) {
+        return val;
+      }
+    }
+    return veh || 'N/A';
+  }
+
+  // केवल अक्षरों और अंकों को साफ़ करने के लिए (Space / Dash Insensitive Matching)
   function sanitize(str) {
     if (!str) return '';
     return str.toString().replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   }
 
-  function getVehicleNo(row) {
-    if (!row) return '';
-    const keys = Object.keys(row);
-    for (let k of keys) {
-      let keyLower = k.toLowerCase();
-      if (keyLower.includes('veh') || keyLower.includes('reg') || keyLower.includes('number') || keyLower.includes('no')) {
-        if (row[k]) return row[k].toString();
-      }
-    }
-    return row[keys[0]] ? row[keys[0]].toString() : '';
-  }
-
-  function getRemarkVal(row) {
-    if (!row) return 'NO INFO';
-    const keys = Object.keys(row);
-    for (let k of keys) {
-      let keyLower = k.toLowerCase();
-      if (keyLower.includes('remark') || keyLower.includes('status')) {
-        if (row[k]) return row[k].toString();
-      }
-    }
-    return 'NO INFO';
-  }
-
+  // index.html के लॉजिक पर आधारित सर्च
   function searchVehicle() {
-    const rawQuery = document.getElementById('searchVehicle').value;
+    const rawQuery = document.getElementById('searchVehicle').value.trim();
     const cleanQuery = sanitize(rawQuery);
     const container = document.getElementById('resultContainer');
     const noDataMsg = document.getElementById('noDataMsg');
     container.innerHTML = '';
 
-    if (cleanQuery.length < 2) {
+    if (rawQuery.length < 2) {
       noDataMsg.innerText = "गाड़ी नंबर सर्च करें...";
       noDataMsg.style.display = 'block';
       return;
     }
 
-    const filtered = vehicleData.filter(row => {
-      let vehClean = sanitize(getVehicleNo(row));
-      return vehClean.includes(cleanQuery);
+    // index.html की तरह पूरा रो + गाड़ी नंबर दोनों मैच करेगा
+    const filtered = rawData.filter(row => {
+      const vehNo = getVehicleNumber(row);
+      const cleanVehNo = sanitize(vehNo);
+
+      // 1. सीधे गाड़ी नंबर से मैच करें
+      if (cleanVehNo.includes(cleanQuery)) return true;
+
+      // 2. index.html की तरह रो की सभी वैल्यू में मैच करें
+      return Object.values(row).some(v => 
+        v !== null && v !== undefined && sanitize(v).includes(cleanQuery)
+      );
     });
 
     if (filtered.length === 0) {
@@ -165,9 +191,12 @@
     noDataMsg.style.display = 'none';
 
     filtered.forEach((row, index) => {
-      const vehNo = getVehicleNo(row) || 'N/A';
-      const remark = getRemarkVal(row);
-      const isNoInfo = sanitize(remark).includes('NOINFO') || remark.trim() === '';
+      const vehNo = getVehicleNumber(row);
+      const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
+      const owner = getVal(row, ['PERMIT HOLDER NAME', 'Permit Holder Name', 'Owner Name', 'Owner', 'Customer Name', 'Party Name', 'Transporter', 'Client']) || '-';
+
+      const remClean = sanitize(remark);
+      const isNoInfo = remClean.includes('NOINFO') || remark.trim() === '' || remClean.includes('PENDING');
 
       const card = document.createElement('div');
       card.className = 'card';
@@ -176,6 +205,10 @@
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h3 style="font-size:18px; font-weight:800; color:var(--primary);">${vehNo}</h3>
           <span class="badge-info">${remark}</span>
+        </div>
+        
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px; font-weight:600;">
+          Owner: <strong>${owner}</strong>
         </div>
 
         ${isNoInfo ? `
