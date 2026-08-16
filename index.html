@@ -61,6 +61,8 @@
       box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.25);
       position: relative;
       overflow: hidden;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .dashboard-header::before {
@@ -95,6 +97,32 @@
       color: #94a3b8; 
       margin-top: 6px; 
       font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-ground-team {
+      background: #4318ff;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(67, 24, 255, 0.4);
+    }
+    .btn-ground-team:hover {
+      background: #3311cc;
+      transform: translateY(-2px);
     }
 
     .header-badge { 
@@ -414,8 +442,16 @@
         <h1><i class="fa-solid fa-truck-monster"></i> Mratyunjay World</h1>
         <p>managed by MRATYUNJAY </p>
       </div>
-      <div class="header-badge">
-        <span class="dot"></span> Live Sync Active
+
+      <div class="header-actions">
+        <!-- New Link to Ground Team Portal -->
+        <a href="ground.html" target="_blank" class="btn-ground-team">
+          <i class="fa-solid fa-user-gear"></i> Ground Team Portal ➔
+        </a>
+        
+        <div class="header-badge">
+          <span class="dot"></span> Live Sync Active
+        </div>
       </div>
     </div>
 
@@ -454,7 +490,7 @@
       </div>
     </div>
 
-    <!-- Main Table Container -->
+    <!-- Main Table Container Card -->
     <div class="main-card" id="mainTableCard">
       <div class="filter-bar">
         <div class="filter-group">
@@ -473,7 +509,6 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 15px;">
-          <!-- Added Sync Timestamp -->
           <span class="sync-timestamp" id="syncTime">
             <i class="fa-solid fa-arrows-rotate"></i> Last Synced: --
           </span>
@@ -514,13 +549,12 @@
   </div>
 
   <script>
-    // ⚠️ यहाँ अपना नया Google Apps Script Deploy किया हुआ URL डालें
-    const API_URL = "https://script.google.com/macros/s/AKfycbwi1anWk3WqC9gaj7jT00TW8AnzElfQnTIQmZ28xpYt4gxxxh9rHLMpQ0nNgxa6tTQHlw/exec";
+    // ⚠️ यहाँ अपना नया Google Apps Script Deploy किया हुआ Web App URL डालें
+    const API_URL = "https://script.google.com/macros/s/AKfycbyNb329KNwYVoC-f0ceBIWg_oBFLGJlvE54kBFtEmCnJwcnrHsm6DMQ2aipIxI83i7W_g/exec";
 
     let rawData = [];
     let currentFilteredData = [];
 
-    // Modern Fetch Request for CORS Block Fix
     function loadData() {
       fetch(API_URL, {
         method: "GET",
