@@ -2,246 +2,244 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PAA 🤵🏻 DASHBOARD</title>
-  
-  <!-- Apple-style Font & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Onboarding Executive Dashboard</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     :root {
-      /* Apple & OnePlus Light Theme Palette */
-      --bg-color: #f5f5f7;                /* Apple Light Gray Background */
-      --card-bg: #ffffff;                 /* Pure White Cards */
-      --card-border: #e5e5ea;             /* Subtle Light Border */
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4318ff;
+      --primary-hover: #3311cc;
+      --primary-light: #f0f3ff;
       
-      --text-primary: #1d1d1f;            /* High-contrast Apple Dark Text */
-      --text-secondary: #86868b;          /* Muted Secondary Text */
+      --success: #05cd99;
+      --success-bg: #e6f9f0;
       
-      --oneplus-red: #eb0029;            /* Signature OnePlus Red */
-      --oneplus-red-hover: #d00024;
+      --danger: #ee5d50;
+      --danger-bg: #fde8e8;
       
-      --apple-blue: #0071e3;
-      --apple-green: #28cd41;
-      --apple-green-bg: #eafaf1;
-      --apple-yellow: #d97706;
-      --apple-yellow-bg: #fffbebf;
-      --apple-red: #ff3b30;
-      --apple-red-bg: #ffefee;
+      --warning: #ffb547;
+      --warning-bg: #fff8e7;
+      
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.03);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+      --shadow-lg: 0 20px 30px -10px rgba(15, 23, 42, 0.1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     
     body { 
-      background-color: var(--bg-color);
-      color: var(--text-primary); 
-      padding: 20px 16px; 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
+      padding: 32px 24px; 
       min-height: 100vh; 
       -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1350px;
       margin: 0 auto;
     }
 
-    /* Light Header Card */
+    /* Executive Header */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
-      background: var(--card-bg);
-      padding: 22px 28px;
+      margin-bottom: 28px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 26px 36px;
       border-radius: 20px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      color: white;
+      box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.25);
       position: relative;
       overflow: hidden;
-      flex-wrap: wrap;
-      gap: 16px;
     }
 
-    /* OnePlus Red Top Line Accent */
     .dashboard-header::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--oneplus-red), #ff5252);
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(67,24,255,0.25) 0%, rgba(255,255,255,0) 70%);
+      pointer-events: none;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .user-avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 2px solid var(--oneplus-red);
-      object-fit: cover;
-      box-shadow: 0 2px 10px rgba(235, 0, 41, 0.2);
-    }
-
-    .header-title-box h1 { 
-      font-size: 22px; 
-      font-weight: 700; 
+    .dashboard-header h1 { 
+      font-size: 24px; 
+      font-weight: 800; 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
-      letter-spacing: -0.4px;
-      color: var(--text-primary);
+      gap: 14px; 
+      letter-spacing: -0.5px;
+    }
+    .dashboard-header h1 i {
+      color: #38bdf8;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 20px;
     }
 
-    .header-title-box p { 
+    .dashboard-header p { 
       font-size: 13px; 
-      color: var(--text-secondary); 
-      margin-top: 4px; 
+      color: #94a3b8; 
+      margin-top: 6px; 
       font-weight: 500;
     }
 
     .header-badge { 
-      background: #f2f2f7; 
+      background: rgba(255, 255, 255, 0.08); 
       padding: 8px 16px; 
       border-radius: 30px; 
       font-size: 12px; 
       font-weight: 600; 
-      border: 1px solid var(--card-border);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       gap: 8px;
-      color: var(--text-primary);
     }
-    
     .header-badge .dot {
-      width: 8px; height: 8px; background: var(--apple-green); border-radius: 50%; box-shadow: 0 0 8px var(--apple-green);
+      width: 8px; height: 8px; background: #05cd99; border-radius: 50%; box-shadow: 0 0 10px #05cd99;
     }
 
-    /* Light Metric Cards */
+    /* KPI Metric Cards Grid */
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
     }
 
     .metric-card {
       background: var(--card-bg);
-      padding: 20px;
+      padding: 24px;
       border-radius: 18px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border-color);
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
 
     .metric-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(67, 24, 255, 0.4);
     }
 
     .metric-info p { 
       font-size: 11px; 
-      color: var(--text-secondary); 
+      color: var(--text-muted); 
       font-weight: 700; 
       text-transform: uppercase; 
-      letter-spacing: 0.6px;
+      letter-spacing: 0.8px;
     }
-    
     .metric-info h2 { 
-      font-size: 28px; 
+      font-size: 32px; 
       font-weight: 800; 
-      color: var(--text-primary); 
-      margin-top: 6px; 
-      letter-spacing: -0.5px;
+      color: var(--text-main); 
+      margin-top: 8px; 
+      letter-spacing: -1px;
     }
 
     .metric-icon { 
-      width: 46px; 
-      height: 46px; 
+      width: 54px; 
+      height: 54px; 
       border-radius: 14px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      font-size: 18px; 
+      font-size: 22px; 
+      transition: transform 0.3s;
+    }
+    .metric-card:hover .metric-icon {
+      transform: scale(1.1);
     }
 
-    .icon-total { background: #e8f2ff; color: var(--apple-blue); }
-    .icon-issued { background: var(--apple-green-bg); color: var(--apple-green); }
-    .icon-pending { background: var(--apple-red-bg); color: var(--apple-red); }
-    .icon-action { background: #fef3c7; color: var(--apple-yellow); }
+    .icon-total { background: #e0f2fe; color: #0284c7; }
+    .icon-issued { background: var(--success-bg); color: var(--success); }
+    .icon-pending { background: var(--danger-bg); color: var(--danger); }
+    .icon-action { background: var(--warning-bg); color: var(--warning); }
 
     /* Main Table Container Card */
     .main-card {
       background: var(--card-bg);
       border-radius: 20px;
-      padding: 22px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
     }
 
     .filter-bar { 
       display: flex; 
-      flex-direction: column;
-      gap: 12px; 
-      margin-bottom: 20px; 
+      justify-content: space-between; 
+      align-items: center; 
+      flex-wrap: wrap; 
+      gap: 16px; 
+      margin-bottom: 24px; 
     }
-    
-    .filter-group { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .filter-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
-    .search-wrapper { position: relative; width: 100%; }
+    .search-wrapper { position: relative; width: 300px; }
     .search-wrapper i { 
       position: absolute; 
       left: 16px; 
       top: 50%; 
       transform: translateY(-50%); 
-      color: var(--text-secondary); 
+      color: var(--text-muted); 
       font-size: 14px;
     }
     
     .search-input {
       width: 100%; 
       padding: 12px 16px 12px 42px; 
-      border: 1px solid var(--card-border); 
+      border: 1px solid var(--border-color); 
       border-radius: 12px; 
-      font-size: 13.5px; 
+      font-size: 13px; 
       outline: none; 
-      background: #f2f2f7;
-      color: var(--text-primary);
+      background: #f8fafc;
+      color: var(--text-main);
       font-weight: 500;
       transition: all 0.2s;
     }
-
-    .search-input:focus {
-      border-color: var(--apple-blue);
-      background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+    .search-input:focus { 
+      border-color: var(--primary); 
+      background: #ffffff; 
+      box-shadow: 0 0 0 4px rgba(67, 24, 255, 0.1); 
     }
 
     .select-filter { 
-      width: 100%;
-      padding: 12px 16px; 
-      border: 1px solid var(--card-border); 
+      padding: 12px 18px; 
+      border: 1px solid var(--border-color); 
       border-radius: 12px; 
-      font-size: 13.5px; 
+      font-size: 13px; 
       outline: none; 
-      background: #f2f2f7; 
-      color: var(--text-primary); 
-      font-weight: 600;
+      background: #f8fafc; 
+      color: var(--text-main); 
+      font-weight: 600; 
       cursor: pointer;
+      max-width: 320px;
+      transition: all 0.2s;
     }
+    .select-filter:focus { border-color: var(--primary); background: #ffffff; }
 
     .btn-export { 
-      width: 100%;
-      justify-content: center;
-      background: var(--oneplus-red); 
+      background: var(--text-main); 
       color: #ffffff; 
       border: none; 
       padding: 12px 20px; 
@@ -251,223 +249,233 @@
       cursor: pointer; 
       display: flex; 
       align-items: center; 
-      gap: 8px; 
-      transition: background 0.2s;
+      gap: 10px; 
+      transition: all 0.2s;
+    }
+    .btn-export:hover { 
+      background: var(--primary); 
+      box-shadow: 0 6px 16px rgba(67, 24, 255, 0.25);
     }
 
-    .btn-export:hover {
-      background: var(--oneplus-red-hover);
-    }
-
-    /* Table Design */
+    /* Table Styling */
     .table-container { 
       overflow-x: auto; 
       border-radius: 14px; 
-      border: 1px solid var(--card-border); 
+      border: 1px solid var(--border-color); 
     }
     
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; min-width: 540px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
     
-    thead tr { background-color: #f9f9fb; }
-    th { padding: 14px 18px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-    td { padding: 14px 18px; border-bottom: 1px solid var(--card-border); vertical-align: middle; color: var(--text-primary); }
+    thead tr { background-color: #f1f5f9; border-bottom: 1px solid var(--border-color); }
+    th { 
+      padding: 16px 20px; 
+      font-weight: 700; 
+      color: var(--text-muted); 
+      text-transform: uppercase; 
+      font-size: 11px; 
+      letter-spacing: 0.8px; 
+    }
+    
+    td { 
+      padding: 16px 20px; 
+      border-bottom: 1px solid var(--border-color); 
+      color: var(--text-main); 
+      vertical-align: middle; 
+      font-weight: 500;
+    }
+    
+    tbody tr { transition: background-color 0.15s; }
+    tbody tr:hover { background-color: #f8fafc; }
+    tbody tr:last-child td { border-bottom: none; }
 
     .btn-vehicle {
-      background: #e8f2ff; 
-      color: var(--apple-blue); 
+      background: var(--primary-light); 
+      color: var(--primary); 
       font-weight: 700; 
-      padding: 6px 12px; 
+      padding: 8px 14px; 
       border-radius: 8px; 
-      border: 1px solid #cce2ff; 
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
+      border: 1px solid rgba(67, 24, 255, 0.15); 
+      cursor: pointer; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .btn-vehicle:hover { 
+      background: var(--primary); 
+      color: #ffffff; 
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(67, 24, 255, 0.2);
     }
 
     .btn-view {
-      background: #f2f2f7; 
-      color: var(--text-primary); 
+      background: #f1f5f9; 
+      color: #475569; 
       font-weight: 600; 
-      padding: 6px 12px; 
+      padding: 8px 14px; 
       border-radius: 8px; 
-      border: 1px solid var(--card-border); 
+      border: 1px solid #cbd5e1; 
+      cursor: pointer; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
       font-size: 12px;
-      cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
-
-    .btn-view:hover { background: #e5e5ea; }
+    .btn-view:hover { background: #e2e8f0; color: #0f172a; }
 
     .badge { 
-      padding: 5px 12px; 
-      border-radius: 20px; 
-      font-size: 11px; 
+      padding: 6px 12px; 
+      border-radius: 30px; 
+      font-size: 11.5px; 
       font-weight: 700; 
       display: inline-flex; 
       align-items: center; 
       gap: 6px; 
     }
-    .badge-issued { background-color: var(--apple-green-bg); color: #15803d; border: 1px solid #bbf7d0; }
-    .badge-pending { background-color: var(--apple-red-bg); color: #b91c1c; border: 1px solid #fecaca; }
-    .badge-warning { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-issued { background-color: var(--success-bg); color: #047857; }
+    .badge-pending { background-color: var(--danger-bg); color: #b91c1c; }
+    .badge-warning { background-color: var(--warning-bg); color: #b45309; }
 
-    /* Modal Styling */
+    /* Modal Detail Overlay */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4); 
-      backdrop-filter: blur(6px); 
+      background: rgba(15, 23, 42, 0.6); 
+      backdrop-filter: blur(8px); 
       display: none; 
       align-items: center; 
       justify-content: center; 
       z-index: 1000;
-      padding: 16px;
     }
 
     .modal-card { 
       background: #ffffff; 
-      width: 100%; 
-      max-width: 520px; 
-      border-radius: 22px; 
+      width: 90%; 
+      max-width: 620px; 
+      border-radius: 20px; 
       overflow: hidden; 
-      border: 1px solid var(--card-border);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+      border: 1px solid var(--border-color);
     }
 
     .modal-header { 
-      background: #f9f9fb; 
-      color: var(--text-primary); 
-      padding: 18px 24px; 
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+      color: white; 
+      padding: 22px 28px; 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      border-bottom: 1px solid var(--card-border);
     }
-    .modal-header h3 { font-size: 16px; font-weight: 700; }
+    .modal-header h3 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 
     .close-modal { 
-      background: #e5e5ea; 
+      background: rgba(255,255,255,0.1); 
       border: none; 
-      color: var(--text-primary); 
-      width: 30px; 
-      height: 30px; 
+      color: white; 
+      width: 32px; 
+      height: 32px; 
       border-radius: 50%; 
+      cursor: pointer; 
       font-size: 18px; 
-      cursor: pointer;
     }
+    .close-modal:hover { background: rgba(255,255,255,0.25); }
 
-    .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; }
-    .detail-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .modal-body { padding: 28px; max-height: 70vh; overflow-y: auto; }
+    .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     
     .detail-item { 
-      background: #f2f2f7; 
-      padding: 12px 14px; 
-      border-radius: 10px; 
-      border: 1px solid var(--card-border); 
+      background: #f8fafc; 
+      padding: 14px 16px; 
+      border-radius: 12px; 
+      border: 1px solid var(--border-color); 
     }
-    .detail-label { font-size: 11px; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; }
-    .detail-value { font-size: 13.5px; color: var(--text-primary); font-weight: 700; margin-top: 4px; word-break: break-word; }
+    .detail-label { font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
+    .detail-value { font-size: 14px; color: var(--text-main); font-weight: 700; margin-top: 5px; word-break: break-word; }
 
-    #loader { text-align: center; padding: 40px 10px; color: var(--oneplus-red); font-weight: 700; font-size: 15px; }
-
-    @media (min-width: 768px) {
-      body { padding: 32px; }
-      .filter-bar { flex-direction: row; justify-content: space-between; }
-      .filter-group { flex-direction: row; width: auto; }
-      .search-wrapper { width: 320px; }
-      .btn-export { width: auto; }
-      .detail-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    #loader { text-align: center; padding: 50px; color: var(--primary); font-weight: 700; font-size: 15px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    
-    <!-- Title: PAA STATE DASHBOARD -->
+    <!-- Header -->
     <div class="dashboard-header">
-      <div class="header-left">
-        <img src="https://ui-avatars.com/api/?name=PAA+Dashboard&background=eb0029&color=fff&size=128" alt="Profile" class="user-avatar" id="userAvatar">
-        <div class="header-title-box">
-          <h1>PAA STATE DASHBOARD</h1>
-          <p>Managed by <strong>Admin</strong> • Real-time Sync Active ⚡</p>
-        </div>
+      <div>
+        <h1><i class="fa-solid fa-truck-monster"></i> Vehicle Onboarding Dashboard</h1>
+        <p>Real-time Google Sheet Syncing System</p>
       </div>
-
-      <div class="header-right">
-        <div class="header-badge">
-          <span class="dot"></span> Live Sync Active
-        </div>
+      <div class="header-badge">
+        <span class="dot"></span> Live Sync Active
       </div>
     </div>
 
-    <!-- Apple Light Style Metric Cards Grid -->
+    <!-- KPI Metric Cards -->
     <div class="metrics-grid">
-      <!-- Total Cases (No Emoji) -->
-      <div class="metric-card" onclick="filterByCard('ALL')">
+      <div class="metric-card" onclick="filterByCard('ALL')" title="Click to view all cases">
         <div class="metric-info">
           <p>Total Cases</p>
           <h2 id="totalCases">0</h2>
         </div>
-        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-open"></i></div>
+        <div class="metric-icon icon-total"><i class="fa-solid fa-folder-closed"></i></div>
       </div>
 
-      <!-- Certificate Issue -->
-      <div class="metric-card" onclick="filterByCard('ISSUED')">
+      <div class="metric-card" onclick="filterByCard('ISSUED')" title="Click to view Issued cases">
         <div class="metric-info">
-          <p>Certificate Issue ✨</p>
-          <h2 id="issuedCount" style="color: var(--apple-green);">0</h2>
+          <p>Certificate Issued</p>
+          <h2 id="issuedCount" style="color: var(--success);">0</h2>
         </div>
         <div class="metric-icon icon-issued"><i class="fa-solid fa-circle-check"></i></div>
       </div>
 
-      <div class="metric-card" onclick="filterByCard('PENDING')">
+      <div class="metric-card" onclick="filterByCard('PENDING')" title="Click to view Pending cases">
         <div class="metric-info">
-          <p>Pending ⏳</p>
-          <h2 id="pendingCount" style="color: var(--apple-red);">0</h2>
+          <p>Total Pendency</p>
+          <h2 id="pendingCount" style="color: var(--danger);">0</h2>
         </div>
-        <div class="metric-icon icon-pending"><i class="fa-solid fa-circle-exclamation"></i></div>
+        <div class="metric-icon icon-pending"><i class="fa-solid fa-triangle-exclamation"></i></div>
       </div>
 
-      <div class="metric-card" onclick="filterByCard('NEED_ACTION')">
+      <div class="metric-card" onclick="filterByCard('NEED_ACTION')" title="Click to view Actionable cases">
         <div class="metric-info">
-          <p>Need Action 🛠️</p>
-          <h2 id="actionableCount" style="color: var(--apple-yellow);">0</h2>
+          <p>Need Action</p>
+          <h2 id="actionableCount" style="color: var(--warning);">0</h2>
         </div>
-        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt"></i></div>
+        <div class="metric-icon icon-action"><i class="fa-solid fa-bolt-lightning"></i></div>
       </div>
     </div>
 
-    <!-- Main Table Container Card -->
-    <div class="main-card">
+    <!-- Main Table Container -->
+    <div class="main-card" id="mainTableCard">
       <div class="filter-bar">
         <div class="filter-group">
           <div class="search-wrapper">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Permit Holder..." onkeyup="applyFilters()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search Vehicle, IMEI, Owner..." onkeyup="applyFilters()">
           </div>
+          
+          <!-- Dynamic Select Dropdown -->
           <select id="remarkFilter" class="select-filter" onchange="applyFilters()">
             <option value="ALL">All Status / Remarks</option>
             <option value="ISSUED">Certificate Issued</option>
             <option value="PENDING">Total Pending</option>
-            <option value="NEED_ACTION">Need Action</option>
+            <option value="NEED_ACTION">Need Action (3 Specific Conditions)</option>
+            <!-- Sheet ke saare unique remarks yahan auto-add ho jayenge -->
           </select>
         </div>
         <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
       </div>
 
-      <div id="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Dashboard Data...</div>
+      <div id="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching Live Data...</div>
 
       <div class="table-container" id="tableWrapper" style="display: none;">
         <table>
           <thead>
             <tr>
-              <th>#</th>
-              <th>Vehicle No.</th>
-              <th>Status</th>
-              <!-- Column Header: Permit Holder -->
-              <th>Permit Holder</th>
+              <th>S.No.</th>
+              <th>Vehicle Number</th>
+              <th>Remark / Status</th>
+              <th>Owner / Company</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -492,7 +500,7 @@
 
   <script>
     // ⚠️ APNA GOOGLE APPS SCRIPT URL HERE PASTE KAREIN
-    const API_URL = "https://script.google.com/macros/s/AKfycbyHslvgv_ZLu_tkuxi6Pi3jBxbiCnzTlYSBy6YVoVIg53JBPDqzFXcvtbyjrlAnWiE/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbweyH7Wt5fd_4mmuIIola5C2OkkalO3BDgIwEUwGbtDcX8PjOZInSgf2M2Rz1IY4gguwQ/exec";
 
     let rawData = [];
     let currentFilteredData = [];
@@ -501,21 +509,21 @@
       const script = document.createElement('script');
       script.src = API_URL + "?callback=handleDataResponse";
       script.onerror = function() {
-        document.getElementById('loader').innerHTML = "<span style='color:var(--apple-red);'>Script Load Failed! Web App URL check karein.</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Script load failed! Check Web App URL.</span>";
       };
       document.body.appendChild(script);
     }
 
     function handleDataResponse(data) {
       if (!data || data.length === 0 || data.error) {
-        document.getElementById('loader').innerHTML = "<span style='color:var(--apple-red);'>Sheet me data nahi mila!</span>";
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>Sheet me data nahi mila!</span>";
         return;
       }
 
       rawData = data;
       currentFilteredData = rawData;
 
-      populateRemarkFilter(rawData);
+      populateRemarkFilter(rawData); // Dynamically populate dropdown
       calculateMetrics(rawData);
       renderTable(rawData);
 
@@ -543,17 +551,21 @@
       return '';
     }
 
+    // Sheet ke saare Unique Remarks ko Select Options me include karne ka function
     function populateRemarkFilter(data) {
       const dropdown = document.getElementById('remarkFilter');
+      
+      // Basic Static Options preserved
       let optionsHTML = `
         <option value="ALL">All Status / Remarks</option>
         <option value="ISSUED">Certificate Issued</option>
         <option value="PENDING">Total Pending</option>
-        <option value="NEED_ACTION">Need Action</option>
+        <option value="NEED_ACTION">Need Action (3 Specific Conditions)</option>
         <option disabled>────────── Sheet Remarks ──────────</option>
       `;
 
       const uniqueRemarks = new Set();
+
       data.forEach(row => {
         let remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']);
         if (remark && remark.toString().trim() !== '') {
@@ -561,42 +573,56 @@
         }
       });
 
+      // Sort alphabetically and add to dropdown
       Array.from(uniqueRemarks).sort().forEach(rem => {
-        optionsHTML += `<option value="EXACT:${rem}">${rem}</option>`;
+        optionsHTML += `<option value="EXACT:rem">{rem}</option>`;
       });
 
       dropdown.innerHTML = optionsHTML;
     }
 
     function getVehicleNumber(row) {
-      let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Registration No', 'Vehicle Number', 'Vehicle No', 'Veh No', 'Reg No']);
+      let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Registration No', 'Vehicle Number', 'Vehicle No', 'Veh No', 'Reg No', 'Vehicle No.']);
+      
       if (veh && !veh.toUpperCase().startsWith('TRAX') && !veh.toUpperCase().startsWith('IMEI') && veh.length < 15) {
         return veh;
       }
+
       const keys = Object.keys(row);
       for (let k of keys) {
         let val = (row[k] || '').toString().trim();
-        if (val.match(/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$/i)) return val;
+        if (val.match(/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}$/i)) {
+          return val;
+        }
       }
       return veh || 'N/A';
     }
 
     function isNeedActionStatus(remark) {
       let rem = remark.toString().toLowerCase();
-      return rem.includes('activation pending') || rem.includes('check not clear') || rem.includes('topup pending') || rem.includes('top up pending');
+      return rem.includes('activation pending') || 
+             rem.includes('check not clear') || 
+             rem.includes('topup pending') || 
+             rem.includes('top up pending');
     }
 
     function calculateMetrics(data) {
-      let total = data.length, issued = 0, pending = 0, needAction = 0;
+      let total = data.length;
+      let issued = 0, pending = 0, needAction = 0;
+
       data.forEach(row => {
-        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || '').toString();
+        let remark = (getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status', 'Cert Status']) || '').toString();
         let remLower = remark.toLowerCase();
-        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
+
+        if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed') || remLower.includes('certificate')) {
           issued++;
         } else {
           pending++;
         }
-        if (isNeedActionStatus(remark)) needAction++;
+
+        if (isNeedActionStatus(remark)) {
+          needAction++;
+        }
       });
 
       document.getElementById('totalCases').innerText = total;
@@ -610,18 +636,16 @@
       tbody.innerHTML = '';
 
       if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--text-secondary);">No matching records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:36px; color:var(--text-muted);">No matching vehicle records found.</td></tr>`;
         return;
       }
 
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-        
-        // Data Fetching: Searching 'Permit Holder'
-        const permitHolder = getVal(row, ['Permit Holder', 'Permit Holder Name', 'PermitHolder', 'Owner Name', 'Owner', 'Customer Name', 'Party Name']) || '-';
+        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Customer', 'Party Name', 'Party', 'Transporter', 'Client']) || '-';
 
-        let remarkBadge = `<span class="badge badge-warning">⚡ ${remark}</span>`;
+        let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
 
         if (remLower.includes('issued') || remLower.includes('done') || remLower.includes('completed')) {
@@ -635,14 +659,14 @@
           <td><strong>${index + 1}</strong></td>
           <td>
             <button class="btn-vehicle" onclick="openVehicleDetail(${index})">
-              <i class="fa-solid fa-bus"></i> ${vehicleNo}
+              <i class="fa-solid fa-truck-front"></i> ${vehicleNo}
             </button>
           </td>
           <td>${remarkBadge}</td>
-          <td><strong>${permitHolder}</strong></td>
+          <td><strong>${owner}</strong></td>
           <td>
             <button class="btn-view" onclick="openVehicleDetail(${index})">
-              <i class="fa-regular fa-eye"></i> View All
+              <i class="fa-solid fa-eye"></i> View All
             </button>
           </td>
         `;
@@ -655,6 +679,11 @@
       if (dropdown) {
         dropdown.value = filterType;
         applyFilters();
+
+        document.getElementById('mainTableCard').scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
       }
     }
 
@@ -691,7 +720,7 @@
       const rowData = currentFilteredData[index];
       const vehicleNo = getVehicleNumber(rowData);
 
-      document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck"></i> ${vehicleNo}`;
+      document.getElementById('modalVehicleTitle').innerHTML = `<i class="fa-solid fa-truck-front"></i> ${vehicleNo}`;
       const modalContent = document.getElementById('modalDetailContent');
       modalContent.innerHTML = '';
 
@@ -702,7 +731,7 @@
 
         const item = document.createElement('div');
         item.className = 'detail-item';
-        item.innerHTML = `<div class="detail-label">${key}</div><div class="detail-value">${val}</div>`;
+        item.innerHTML = `<div class="detail-label">key</div><divclass="detail-value">{val}</div>`;
         modalContent.appendChild(item);
       });
 
@@ -722,7 +751,7 @@
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a');
       a.href = window.URL.createObjectURL(blob);
-      a.download = `PAA_State_Data_${new Date().toISOString().slice(0,10)}.csv`;
+      a.download = `Vehicle_Data_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
     }
 
@@ -735,3 +764,4 @@
   </script>
 </body>
 </html>
+
