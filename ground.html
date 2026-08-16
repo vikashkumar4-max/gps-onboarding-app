@@ -1,390 +1,221 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ground Team - Action Portal</title>
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ground Team Portal - Mratyunjay World</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4318ff;
+      --danger: #ee5d50;
+      --danger-bg: #fde8e8;
+      --warning: #ffb547;
+      --warning-bg: #fff8e7;
+      --border-color: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 20px 15px; }
+    .container { max-width: 600px; margin: 0 auto; }
+
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white; padding: 20px; border-radius: 16px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header h2 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
     
-    <style>
-        :root {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --primary: #4318ff;
-            --success: #05cd99;
-            --success-bg: #e6f9f0;
-            --danger: #ee5d50;
-            --danger-bg: #fde8e8;
-            --warning: #ffb547;
-            --warning-bg: #fff8e7;
-            --border-color: #cbd5e1;
-            --radius: 16px;
-        }
+    .card {
+      background: var(--card-bg); padding: 20px; border-radius: 16px;
+      border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+      margin-bottom: 16px;
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .search-box {
+      width: 100%; padding: 14px 16px; border: 2px solid var(--primary);
+      border-radius: 12px; font-size: 16px; font-weight: 700; text-transform: uppercase;
+      outline: none; background: #ffffff;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 16px;
-            max-width: 500px;
-            margin: 0 auto;
-            -webkit-font-smoothing: antialiased;
-        }
+    .alert-no-info {
+      background: var(--danger-bg); border: 1px solid var(--danger); color: var(--danger);
+      padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; margin: 12px 0;
+      display: flex; align-items: center; gap: 8px;
+    }
 
-        /* Mobile Header */
-        .ground-header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            padding: 18px 20px;
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
-        }
+    .badge-info {
+      background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; display: inline-block;
+    }
 
-        .ground-header h1 {
-            font-size: 19px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .form-group { margin-top: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
 
-        .ground-header h1 i { color: #38bdf8; }
+    select, textarea {
+      width: 100%; padding: 12px; border: 1px solid var(--border-color);
+      border-radius: 10px; font-size: 14px; font-weight: 600; outline: none; background: #f8fafc;
+    }
 
-        .ground-header p {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
+    .btn-submit {
+      background: var(--primary); color: white; border: none; padding: 14px;
+      border-radius: 10px; font-weight: 800; font-size: 14px; width: 100%;
+      cursor: pointer; margin-top: 14px; transition: background 0.2s;
+    }
+    .btn-submit:hover { background: #3311cc; }
 
-        /* Search Section */
-        .search-container {
-            background: white;
-            padding: 16px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        .search-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 14px 14px 46px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 800;
-            outline: none;
-            background: #f8fafc;
-            text-transform: uppercase;
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            background: #ffffff;
-        }
-
-        /* Vehicle Result Card */
-        .vehicle-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
-            display: none; /* Auto hides until searched or listed */
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed var(--border-color);
-            margin-bottom: 14px;
-        }
-
-        .vehicle-no {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-main);
-            letter-spacing: 0.5px;
-        }
-
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .status-danger { background: var(--danger-bg); color: var(--danger); }
-        .status-success { background: var(--success-bg); color: var(--success); }
-
-        /* Remarks Box Styling */
-        .remark-box {
-            background: #f8fafc;
-            border-left: 4px solid var(--danger);
-            padding: 12px 14px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .remark-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .remark-text {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--danger);
-        }
-
-        /* Action Form */
-        .action-form {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .form-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .select-status, .textarea-remark {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            outline: none;
-            margin-bottom: 10px;
-            background: #ffffff;
-        }
-
-        .textarea-remark {
-            resize: none;
-            height: 65px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-
-        .btn-submit:hover {
-            background: #3311cc;
-        }
-
-        .no-data-msg {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-muted);
-            font-weight: 600;
-            display: none;
-        }
-    </style>
+    #loader { text-align: center; font-weight: 700; color: var(--primary); padding: 20px; }
+    #noDataMsg { text-align: center; color: var(--text-muted); font-weight: 600; padding: 20px; }
+  </style>
 </head>
 <body>
 
-    <!-- Ground Header -->
-    <div class="ground-header">
-        <h1><i class="fa-solid fa-satellite-dish"></i> Ground Action Team</h1>
-        <p>Vehicle Search & Status Field Update</p>
-    </div>
+<div class="container">
+  <div class="header">
+    <h2><i class="fa-solid fa-person-walking-luggage"></i> Ground Team Portal</h2>
+    <span style="font-size:11px; opacity:0.8;">Mratyunjay World</span>
+  </div>
 
-    <!-- Search Box -->
-    <div class="search-container">
-        <label class="search-title">Search Vehicle</label>
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="गाड़ी का नंबर लिखें (e.g. MH04AB1234)..." onkeyup="searchVehicle()">
+  <!-- Search Section -->
+  <div class="card">
+    <input type="text" id="searchVehicle" class="search-box" placeholder="गाड़ी का नंबर डालें (e.g. MH04...)" onkeyup="searchVehicle()">
+  </div>
+
+  <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> Data Loading...</div>
+  <div id="noDataMsg" style="display:none;">गाड़ी नंबर सर्च करें...</div>
+
+  <!-- Results Area -->
+  <div id="resultContainer"></div>
+</div>
+
+<script>
+  // ⚠️ अपनी Google Script का Web App URL यहाँ पेस्ट करें
+  const API_URL = "https://script.google.com/macros/s/AKfycbyNb329KNwYVoC-f0ceBIWg_oBFLGJlvE54kBFtEmCnJwcnrHsm6DMQ2aipIxI83i7W_g/exec";
+
+  let vehicleData = [];
+
+  function loadData() {
+    fetch(API_URL, { method: "GET", redirect: "follow" })
+      .then(res => res.json())
+      .then(data => {
+        vehicleData = data;
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('noDataMsg').style.display = 'block';
+      })
+      .catch(err => {
+        document.getElementById('loader').innerHTML = "<span style='color:red;'>डेटा लोड करने में समस्या आई!</span>";
+      });
+  }
+
+  function getVal(row, possibleNames) {
+    if (!row) return '';
+    const keys = Object.keys(row);
+    for (let name of possibleNames) {
+      let matchedKey = keys.find(k => k.toLowerCase().trim() === name.toLowerCase().trim());
+      if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== '') return row[matchedKey];
+    }
+    return '';
+  }
+
+  function searchVehicle() {
+    const query = document.getElementById('searchVehicle').value.trim().toUpperCase();
+    const container = document.getElementById('resultContainer');
+    const noDataMsg = document.getElementById('noDataMsg');
+    container.innerHTML = '';
+
+    if (query.length < 3) {
+      noDataMsg.style.display = 'block';
+      return;
+    }
+
+    const filtered = vehicleData.filter(row => {
+      let veh = getVal(row, ['Vehicle Reg No', 'Vehicle Number', 'Vehicle No', 'Veh No']).toString().toUpperCase();
+      return veh.includes(query);
+    });
+
+    if (filtered.length === 0) {
+      noDataMsg.innerText = "कोई गाड़ी नहीं मिली!";
+      noDataMsg.style.display = 'block';
+      return;
+    }
+
+    noDataMsg.style.display = 'none';
+
+    filtered.forEach((row, index) => {
+      const vehNo = getVal(row, ['Vehicle Reg No', 'Vehicle Number', 'Vehicle No', 'Veh No']) || 'N/A';
+      const remark = getVal(row, ['Remarks', 'Remark', 'Status']) || 'NO INFO';
+      const isNoInfo = remark.toString().toUpperCase().includes('NO INFO');
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:18px; font-weight:800; color:var(--primary);">${vehNo}</h3>
+          <span class="badge-info">${remark}</span>
         </div>
-    </div>
 
-    <!-- Container for Search Results -->
-    <div id="resultsContainer">
+        ${isNoInfo ? `
+          <div class="alert-no-info">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px;"></i>
+            <span>ALERT: गाड़ी LIVE करवाना आवश्यक है!</span>
+          </div>
+        ` : ''}
 
-        <!-- Vehicle 1 (Pending Case - No Info Issue) -->
-        <div class="vehicle-card" data-vehicleno="MH04AB1234">
-            <div class="card-header">
-                <span class="vehicle-no">MH 04 AB 1234</span>
-                <span class="status-badge status-danger" id="badge-MH04AB1234">NO INFO / ISSUE</span>
-            </div>
-
-            <!-- Backend Remark View -->
-            <div class="remark-box" id="backend-box-MH04AB1234">
-                <div class="remark-title"><i class="fa-solid fa-headset"></i> Backend Team Remark</div>
-                <div class="remark-text">"Device properly kaam nahi kar rahi hai - Check GPS Connection"</div>
-            </div>
-
-            <!-- Ground Team Action Section -->
-            <div class="action-form">
-                <label class="form-label"><i class="fa-solid fa-pen-to-square"></i> Ground Action & Remark Update:</label>
-                
-                <select class="select-status" id="status-select-MH04AB1234">
-                    <option value="Vehicle Live">Vehicle Live (फ़िक्स हो गया)</option>
-                    <option value="Device Changed">Device Replaced (डिवाइस बदली)</option>
-                    <option value="Wire Fault">Wire Fault (इलेक्ट्रिशियन की ज़रूरत है)</option>
-                    <option value="Still Issue">Still Issue (इशू बना हुआ है)</option>
-                </select>
-
-                <textarea class="textarea-remark" id="ground-remark-MH04AB1234" placeholder="अपना रिमार्क यहाँ दर्ज करें (उदा. 'GPS Wire Replaced & Vehicle Live Now')..."></textarea>
-
-                <button class="btn-submit" onclick="submitGroundAction('MH04AB1234')">
-                    <i class="fa-solid fa-paper-plane"></i> Submit Status Update
-                </button>
-            </div>
+        <div class="form-group">
+          <label>Ground Team Response Status:</label>
+          <select id="groundStatus-${index}">
+            <option value="NOW VEHICLE LIVE">NOW VEHICLE LIVE</option>
+            <option value="OTHER ISSUE">OTHER ISSUE</option>
+            <option value="NEED MORE TIME">NEED MORE TIME</option>
+          </select>
         </div>
 
-        <!-- Vehicle 2 (Demo Case) -->
-        <div class="vehicle-card" data-vehicleno="DL01XY9876">
-            <div class="card-header">
-                <span class="vehicle-no">DL 01 XY 9876</span>
-                <span class="status-badge status-danger" id="badge-DL01XY9876">NO INFO</span>
-            </div>
-
-            <div class="remark-box" id="backend-box-DL01XY9876">
-                <div class="remark-title"><i class="fa-solid fa-headset"></i> Backend Team Remark</div>
-                <div class="remark-text">"Ignition Wire not connected properly"</div>
-            </div>
-
-            <div class="action-form">
-                <label class="form-label"><i class="fa-solid fa-pen-to-square"></i> Ground Action & Remark Update:</label>
-                
-                <select class="select-status" id="status-select-DL01XY9876">
-                    <option value="Vehicle Live">Vehicle Live (फ़िक्स हो गया)</option>
-                    <option value="Device Changed">Device Replaced</option>
-                    <option value="Still Issue">Still Issue</option>
-                </select>
-
-                <textarea class="textarea-remark" id="ground-remark-DL01XY9876" placeholder="अपना रिमार्क यहाँ लिखें..."></textarea>
-
-                <button class="btn-submit" onclick="submitGroundAction('DL01XY9876')">
-                    <i class="fa-solid fa-paper-plane"></i> Submit Status Update
-                </button>
-            </div>
+        <div class="form-group">
+          <label>Additional Details (Optional):</label>
+          <textarea id="groundRemark-${index}" placeholder="कोई अन्य टिप्पणी यहाँ लिखें..."></textarea>
         </div>
 
-    </div>
+        <button class="btn-submit" onclick="submitGroundUpdate('${vehNo}', ${index})">
+          <i class="fa-solid fa-paper-plane"></i> Update Status
+        </button>
+      `;
+      container.appendChild(card);
+    });
+  }
 
-    <div class="no-data-msg" id="noDataMsg">
-        <i class="fa-solid fa-circle-exclamation" style="font-size:24px; color:var(--text-muted); margin-bottom:8px;"></i>
-        <p>यह गाड़ी नंबर लिस्ट में नहीं मिला।</p>
-    </div>
+  function submitGroundUpdate(vehNo, index) {
+    const status = document.getElementById(`groundStatus-${index}`).value;
+    const remark = document.getElementById(`groundRemark-${index}`).value;
 
-    <script>
-        // Search Filter Function
-        function searchVehicle() {
-            let input = document.getElementById('searchInput').value.trim().toUpperCase();
-            let cards = document.getElementsByClassName('vehicle-card');
-            let noData = document.getElementById('noDataMsg');
-            let foundCount = 0;
+    alert(`गाड़ी ${vehNo} का स्टेटस "${status}" अपडेट किया जा रहा है...`);
 
-            if(input === "") {
-                // Hide all cards if search is empty
-                for (let i = 0; i < cards.length; i++) {
-                    cards[i].style.display = "none";
-                }
-                noData.style.display = "none";
-                return;
-            }
+    fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        vehicleNo: vehNo,
+        status: status,
+        remark: remark
+      })
+    })
+    .then(() => {
+      alert("स्टेटस सफलतापूर्वक अपडेट हो गया!");
+      loadData(); // री-लोड डेटा
+    })
+    .catch(err => alert("अपडेट में त्रुटि हुई: " + err));
+  }
 
-            for (let i = 0; i < cards.length; i++) {
-                let vehNo = cards[i].getAttribute('data-vehicleno').toUpperCase();
-                
-                if (vehNo.includes(input)) {
-                    cards[i].style.display = "block";
-                    foundCount++;
-                } else {
-                    cards[i].style.display = "none";
-                }
-            }
+  // शुरुआत में डेटा लोड करें
+  loadData();
+</script>
 
-            if(foundCount === 0) {
-                noData.style.display = "block";
-            } else {
-                noData.style.display = "none";
-            }
-        }
-
-        // Submit Ground Action Function
-        function submitGroundAction(vehNo) {
-            let selectedStatus = document.getElementById('status-select-' + vehNo).value;
-            let remarkText = document.getElementById('ground-remark-' + vehNo).value.trim();
-
-            if(remarkText === "") {
-                alert("कृपया सबमिट करने से पहले अपना रिमार्क (Remark) दर्ज करें!");
-                return;
-            }
-
-            // Update UI Realtime
-            let badge = document.getElementById('badge-' + vehNo);
-            let backendBox = document.getElementById('backend-box-' + vehNo);
-
-            if(selectedStatus === "Vehicle Live") {
-                badge.className = "status-badge status-success";
-                badge.innerText = "VEHICLE LIVE";
-                backendBox.style.borderLeftColor = "var(--success)";
-            }
-
-            backendBox.innerHTML = `
-                <div class="remark-title" style="color:var(--success)"><i class="fa-solid fa-check-circle"></i> Ground Team Updated Remark</div>
-                <div class="remark-text" style="color:var(--text-main)">[${selectedStatus}] ${remarkText}</div>
-            `;
-
-            alert("गाड़ी " + vehNo + " का स्टेटस सफलतापूर्वक सहेज (Save) लिया गया है!");
-            document.getElementById('ground-remark-' + vehNo).value = "";
-        }
-    </script>
 </body>
 </html>
