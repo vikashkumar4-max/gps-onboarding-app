@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ground Team - Action Portal</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #4318ff;
+            --success: #05cd99;
+            --success-bg: #e6f9f0;
+            --danger: #ee5d50;
+            --danger-bg: #fde8e8;
+            --warning: #ffb547;
+            --warning-bg: #fff8e7;
+            --border-color: #cbd5e1;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Mobile Header */
+        .ground-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 18px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+        }
+
+        .ground-header h1 {
+            font-size: 19px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ground-header h1 i { color: #38bdf8; }
+
+        .ground-header p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Search Section */
+        .search-container {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .search-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 14px 14px 46px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            outline: none;
+            background: #f8fafc;
+            text-transform: uppercase;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
+        /* Vehicle Result Card */
+        .vehicle-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            display: none; /* Auto hides until searched or listed */
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 14px;
+        }
+
+        .vehicle-no {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-danger { background: var(--danger-bg); color: var(--danger); }
+        .status-success { background: var(--success-bg); color: var(--success); }
+
+        /* Remarks Box Styling */
+        .remark-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--danger);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .remark-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .remark-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        /* Action Form */
+        .action-form {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .select-status, .textarea-remark {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            margin-bottom: 10px;
+            background: #ffffff;
+        }
+
+        .textarea-remark {
+            resize: none;
+            height: 65px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #3311cc;
+        }
+
+        .no-data-msg {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ground Header -->
+    <div class="ground-header">
+        <h1><i class="fa-solid fa-satellite-dish"></i> Ground Action Team</h1>
+        <p>Vehicle Search & Status Field Update</p>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-container">
+        <label class="search-title">Search Vehicle</label>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="गाड़ी का नंबर लिखें (e.g. MH04AB1234)..." onkeyup="searchVehicle()">
+        </div>
+    </div>
+
+    <!-- Container for Search Results -->
+    <div id="resultsContainer">
+
+        <!-- Vehicle 1 (Pending Case - No Info Issue) -->
+        <div class="vehicle-card" data-vehicleno="MH04AB1234">
+            <div class="card-header">
+                <span class="vehicle-no">MH 04 AB 1234</span>
+                <span class="status-badge status-danger" id="badge-MH04AB1234">NO INFO / ISSUE</span>
+            </div>
+
+            <!-- Backend Remark View -->
+            <div class="remark-box" id="backend-box-MH04AB1234">
+                <div class="remark-title"><i class="fa-solid fa-headset"></i> Backend Team Remark</div>
+                <div class="remark-text">"Device properly kaam nahi kar rahi hai - Check GPS Connection"</div>
+            </div>
+
+            <!-- Ground Team Action Section -->
+            <div class="action-form">
+                <label class="form-label"><i class="fa-solid fa-pen-to-square"></i> Ground Action & Remark Update:</label>
+                
+                <select class="select-status" id="status-select-MH04AB1234">
+                    <option value="Vehicle Live">Vehicle Live (फ़िक्स हो गया)</option>
+                    <option value="Device Changed">Device Replaced (डिवाइस बदली)</option>
+                    <option value="Wire Fault">Wire Fault (इलेक्ट्रिशियन की ज़रूरत है)</option>
+                    <option value="Still Issue">Still Issue (इशू बना हुआ है)</option>
+                </select>
+
+                <textarea class="textarea-remark" id="ground-remark-MH04AB1234" placeholder="अपना रिमार्क यहाँ दर्ज करें (उदा. 'GPS Wire Replaced & Vehicle Live Now')..."></textarea>
+
+                <button class="btn-submit" onclick="submitGroundAction('MH04AB1234')">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Status Update
+                </button>
+            </div>
+        </div>
+
+        <!-- Vehicle 2 (Demo Case) -->
+        <div class="vehicle-card" data-vehicleno="DL01XY9876">
+            <div class="card-header">
+                <span class="vehicle-no">DL 01 XY 9876</span>
+                <span class="status-badge status-danger" id="badge-DL01XY9876">NO INFO</span>
+            </div>
+
+            <div class="remark-box" id="backend-box-DL01XY9876">
+                <div class="remark-title"><i class="fa-solid fa-headset"></i> Backend Team Remark</div>
+                <div class="remark-text">"Ignition Wire not connected properly"</div>
+            </div>
+
+            <div class="action-form">
+                <label class="form-label"><i class="fa-solid fa-pen-to-square"></i> Ground Action & Remark Update:</label>
+                
+                <select class="select-status" id="status-select-DL01XY9876">
+                    <option value="Vehicle Live">Vehicle Live (फ़िक्स हो गया)</option>
+                    <option value="Device Changed">Device Replaced</option>
+                    <option value="Still Issue">Still Issue</option>
+                </select>
+
+                <textarea class="textarea-remark" id="ground-remark-DL01XY9876" placeholder="अपना रिमार्क यहाँ लिखें..."></textarea>
+
+                <button class="btn-submit" onclick="submitGroundAction('DL01XY9876')">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Status Update
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="no-data-msg" id="noDataMsg">
+        <i class="fa-solid fa-circle-exclamation" style="font-size:24px; color:var(--text-muted); margin-bottom:8px;"></i>
+        <p>यह गाड़ी नंबर लिस्ट में नहीं मिला।</p>
+    </div>
+
+    <script>
+        // Search Filter Function
+        function searchVehicle() {
+            let input = document.getElementById('searchInput').value.trim().toUpperCase();
+            let cards = document.getElementsByClassName('vehicle-card');
+            let noData = document.getElementById('noDataMsg');
+            let foundCount = 0;
+
+            if(input === "") {
+                // Hide all cards if search is empty
+                for (let i = 0; i < cards.length; i++) {
+                    cards[i].style.display = "none";
+                }
+                noData.style.display = "none";
+                return;
+            }
+
+            for (let i = 0; i < cards.length; i++) {
+                let vehNo = cards[i].getAttribute('data-vehicleno').toUpperCase();
+                
+                if (vehNo.includes(input)) {
+                    cards[i].style.display = "block";
+                    foundCount++;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+
+            if(foundCount === 0) {
+                noData.style.display = "block";
+            } else {
+                noData.style.display = "none";
+            }
+        }
+
+        // Submit Ground Action Function
+        function submitGroundAction(vehNo) {
+            let selectedStatus = document.getElementById('status-select-' + vehNo).value;
+            let remarkText = document.getElementById('ground-remark-' + vehNo).value.trim();
+
+            if(remarkText === "") {
+                alert("कृपया सबमिट करने से पहले अपना रिमार्क (Remark) दर्ज करें!");
+                return;
+            }
+
+            // Update UI Realtime
+            let badge = document.getElementById('badge-' + vehNo);
+            let backendBox = document.getElementById('backend-box-' + vehNo);
+
+            if(selectedStatus === "Vehicle Live") {
+                badge.className = "status-badge status-success";
+                badge.innerText = "VEHICLE LIVE";
+                backendBox.style.borderLeftColor = "var(--success)";
+            }
+
+            backendBox.innerHTML = `
+                <div class="remark-title" style="color:var(--success)"><i class="fa-solid fa-check-circle"></i> Ground Team Updated Remark</div>
+                <div class="remark-text" style="color:var(--text-main)">[${selectedStatus}] ${remarkText}</div>
+            `;
+
+            alert("गाड़ी " + vehNo + " का स्टेटस सफलतापूर्वक सहेज (Save) लिया गया है!");
+            document.getElementById('ground-remark-' + vehNo).value = "";
+        }
+    </script>
+</body>
+</html>
