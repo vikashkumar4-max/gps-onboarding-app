@@ -257,6 +257,15 @@
       box-shadow: 0 6px 16px rgba(67, 24, 255, 0.25);
     }
 
+    .sync-timestamp {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
     /* Table Styling */
     .table-container { 
       overflow-x: auto; 
@@ -460,10 +469,16 @@
             <option value="ISSUED">Certificate Issued</option>
             <option value="PENDING">Total Pending</option>
             <option value="NEED_ACTION">Need Action (3 Specific Conditions)</option>
-            <!-- Sheet ke saare unique remarks yahan auto-add ho jayenge -->
           </select>
         </div>
-        <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <!-- Added Sync Timestamp -->
+          <span class="sync-timestamp" id="syncTime">
+            <i class="fa-solid fa-arrows-rotate"></i> Last Synced: --
+          </span>
+          <button class="btn-export" onclick="exportDataToCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+        </div>
       </div>
 
       <div id="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching Live Data...</div>
@@ -499,7 +514,6 @@
   </div>
 
   <script>
-    // ⚠️ APNA GOOGLE APPS SCRIPT URL HERE PASTE KAREIN
     const API_URL = "https://script.google.com/macros/s/AKfycbytfPCs8stLdWRXH4vHOPby26tP4RGLRv32jEoR0PPEAs9Qh2aJnWetLccDMFlGpWQLbA/exec";
 
     let rawData = [];
@@ -523,12 +537,19 @@
       rawData = data;
       currentFilteredData = rawData;
 
-      populateRemarkFilter(rawData); // Dynamically populate dropdown
+      populateRemarkFilter(rawData);
       calculateMetrics(rawData);
       renderTable(rawData);
+      updateSyncTime(); // Update Timestamp on data fetch
 
       document.getElementById('loader').style.display = 'none';
       document.getElementById('tableWrapper').style.display = 'block';
+    }
+
+    function updateSyncTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('syncTime').innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Last Synced: ${timeStr}`;
     }
 
     function getVal(row, possibleNames) {
@@ -551,11 +572,9 @@
       return '';
     }
 
-    // Sheet ke saare Unique Remarks ko Select Options me include karne ka function
     function populateRemarkFilter(data) {
       const dropdown = document.getElementById('remarkFilter');
       
-      // Basic Static Options preserved
       let optionsHTML = `
         <option value="ALL">All Status / Remarks</option>
         <option value="ISSUED">Certificate Issued</option>
@@ -573,7 +592,6 @@
         }
       });
 
-      // Sort alphabetically and add to dropdown
       Array.from(uniqueRemarks).sort().forEach(rem => {
         optionsHTML += `<option value="EXACT:${rem}">${rem}</option>`;
       });
@@ -643,7 +661,9 @@
       data.forEach((row, index) => {
         const vehicleNo = getVehicleNumber(row);
         const remark = getVal(row, ['Remarks', 'Remark', 'Portal Status', 'Portal', 'Status']) || 'Pending';
-        const owner = getVal(row, ['Owner Name', 'Owner', 'Customer Name', 'Customer', 'Party Name', 'Party', 'Transporter', 'Client']) || '-';
+        
+        // Extended keys to accurately capture Owner Name
+        const owner = getVal(row, ['Owner Name', 'Owner', 'OwnerName', 'Customer Name', 'Customer', 'Party Name', 'Party', 'Transporter', 'Client', 'Company']) || 'N/A';
 
         let remarkBadge = `<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> ${remark}</span>`;
         let remLower = remark.toString().toLowerCase();
